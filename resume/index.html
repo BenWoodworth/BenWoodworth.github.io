@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <script src="/assets/js/jquery-1.12.1.min.js"></script>
+    <script src="/assets/js/mustache.min.js"></script>
+    <script src="/assets/js/template-loader.js"></script>
+
+    <title>Ben Woodworth - Home</title>
+</head>
+<body>
+<script id="template" type="text/html">
+    <iframe src="https://docs.google.com/document/d/166Jy7gpJBwUDKRZPQ1d_JoKXv5TuwZC5UXZKmWKZ8CE/pub?embedded=true"
+            style="width: 8in; height: 11in;"></iframe>
+</script>
+
+<script>
+    loadTemplate("/assets/templates/site-body.mustache", "resume");
+</script>
+</body>
+</html>

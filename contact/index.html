@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <script src="/assets/js/jquery-1.12.1.min.js"></script>
+    <script src="/assets/js/mustache.min.js"></script>
+    <script src="/assets/js/template-loader.js"></script>
+
+    <title>Ben Woodworth - Home</title>
+</head>
+<body>
+<script id="template" type="text/html">
+    Personal email: <a href="mailto:ben@benwoodworth.net">ben@benwoodworth.net</a><br />
+    School email: <a href="mailto:bxw4574@rit.edu">bxw4574@rit.edu</a><br />
+</script>
+
+<script>
+    loadTemplate("/assets/templates/site-body.mustache", "contact");
+</script>
+</body>
+</html>

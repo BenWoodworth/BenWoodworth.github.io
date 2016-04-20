@@ -1,0 +1,38 @@
+<header>
+	Ben Woodworth
+</header>
+<div class="page">
+    <nav id="navigation" class="{{mobile}}">
+		<a id="nav-home" href="/"{{{pageHome}}}>
+			<img src="/assets/img/nav/home.svg">Home
+		</a>
+		<a id="nav-edu" href="/education/"{{{pageEdu}}}>
+			<img src="/assets/img/nav/education.svg">Education
+		</a>
+        <a id="nav-resume" href="/resume/"{{{pageResume}}}>
+            <img src="/assets/img/nav/resume.svg">Resume
+        </a>
+        <a id="nav-contact" href="/contact/"{{{pageContact}}}>
+            <img src="/assets/img/nav/contact.svg">Contact
+        </a>
+		<a id="nav-github" href="http://www.github.com/benwoodworth" target="_blank">
+			<img src="/assets/img/nav/github.svg">GitHub
+		</a>
+		<a id="nav-linkedin" href="http://www.linkedin.com/in/benjaminwoodworth" target="_blank">
+			<img src="/assets/img/nav/linkedin.svg">LinkedIn
+		</a>
+	</nav>
+	<div class="content">
+		{{{content}}}
+	</div>
+</div>
+<script async>
+	// Analytics
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-73960355-1', 'auto');
+	ga('send', 'pageview');
+</script>

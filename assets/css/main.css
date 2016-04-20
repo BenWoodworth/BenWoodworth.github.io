@@ -1,0 +1,91 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.content { flex: 1; }
+.header { flex: 0; }
+.page { flex: 1; }
+.nav { flex: initial; }
+
+.page {
+    display: flex;
+    flex-direction: row;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+    background-color: #222222;
+    color: #d2d2d2;
+    padding: 20px;
+    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: 25pt;
+    transition: 7s;
+}
+
+header:hover {
+    text-shadow: 2px 2px 10px orange;
+    transition: 1s;
+}
+
+nav.no-mobile {
+    width: 64px;
+    transition: 750ms;
+    overflow: hidden;
+}
+
+nav.no-mobile:hover, nav.mobile {
+    width: 200px;
+    overflow-y: auto;
+    transition: 250ms;
+}
+
+nav a {
+    height: 40px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16pt;
+    color: black;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+    padding: 12px;
+    transition: 300ms;
+}
+
+nav a:hover { transition: 500ms; }
+.cur-nav-page   { border-right: 6px solid; }
+
+#nav-home:hover     { background-color: #36C9FF; }
+#nav-edu:hover      { background-color: #FE8427; }
+#nav-contact:hover  { background-color: #9ACD32; }
+#nav-resume:hover   { background-color: #EBEB00; }
+#nav-github:hover   { background-color: #800080; }
+#nav-linkedin:hover { background-color: #0077B5; }
+
+#nav-home     { border-right-color: #36C9FF; }
+#nav-edu      { border-right-color: #FE8427; }
+#nav-contact  { border-right-color: #9ACD32; }
+#nav-resume   { border-right-color: #EBEB00; }
+#nav-github   { border-right-color: #800080; }
+#nav-linkedin { border-right-color: #0077B5; }
+
+nav a img {
+    height: inherit;
+    display: inline;
+    vertical-align: middle;
+    margin-right: 16px;
+}
+
+.content {
+    background-color: #e7e7e7;
+    overflow: auto;
+    white-space: normal;
+    padding: 45px;
+    box-shadow: inset 9px 0 11px -9px rgba(63, 63, 63, .3);
+}
