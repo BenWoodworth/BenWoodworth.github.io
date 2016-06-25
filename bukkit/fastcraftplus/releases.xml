@@ -21,4 +21,8 @@
         <change>A test release</change>
         <change>Is not stable</change>
     </release>
+    
+    <release version="0.25.100" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.25/FastCraftPlus.jar">
+        <change>This is a change.</change>
+    </release>
 </releases>
