@@ -7,6 +7,12 @@
 -->
 
 <releases>
+    <release version="v0.26" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24.3/FastCraftPlus.jar">
+        <change>TEST UPDATE.</change>
+        <change>Not an actual update.</change>
+        <change>For testing purposes.</change>
+    </release>
+
     <release version="v0.24.3" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24.3/FastCraftPlus.jar">
         <change>Fixed NullPointerExceptions.</change>
     </release>
