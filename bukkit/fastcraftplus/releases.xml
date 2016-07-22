@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml
+             version="1.0" encoding="UTF-8"?>
 
 <!--
     Used by FastCraft+ to fetch stability updates.
@@ -7,97 +8,116 @@
 -->
 
 <releases>
-    <release version="0.26" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24.3/FastCraftPlus.jar">
+    <release md5="DF5E8A6B832B517824982C33AAC82A55" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24.3/FastCraftPlus.jar"
+             version="0.26" stable="true">
         <change>TEST UPDATE.</change>
         <change>Not an actual update.</change>
         <change>For testing purposes.</change>
     </release>
 
-    <release version="0.24.3" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24.3/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24.3/FastCraftPlus.jar"
+             version="0.24.3" stable="true" md5="DF5E8A6B832B517824982C33AAC82A55">
         <change>Fixed NullPointerExceptions.</change>
     </release>
 
-    <release version="0.24.2" stable="false" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24.2/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24.2/FastCraftPlus.jar"
+             version="0.24.2" stable="false" md5="50A174763C020B8C580E25B146DF2BC8">
         <change>Fixed a NullPointerException.</change>
         <change>Added method to API to see if an inventory is a GUI.</change>
     </release>
 
-    <release version="0.24.1" stable="false" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24.1/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24.1/FastCraftPlus.jar"
+             version="0.24.1" stable="false" md5="21D8C545E6E3B374D45C5E64BA0AD701">
         <change>Fixed toolbar not showing up in the UI on first run.</change>
         <change>Fixed tipped arrow placeholder recipe showing up in UI.</change>
         <change>Updated German translation.</change>
     </release>
 
-    <release version="0.24" stable="false" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24/FastCraftPlus.jar"
+             version="0.24" stable="false" md5="9F90C1E2AB4B90498CC68A4E3CF9FDDA">
         <change>Added crafting multiplier that multiplies the number of items crafted.</change>
         <change>Added GUI customization to config.yml.</change>
         <change>Fixed refresh button leaving some recipes, even if hidden.</change>
     </release>
 
-    <release version="0.23" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.23/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.23/FastCraftPlus.jar"
+             version="0.23" stable="true" md5="5256ABB82D06D84531C08F93D91D8C2D">
         <change>Internal bug and performance fixes.</change>
         <change>Fixed recipes with ANY data not showing in FastCraft+ interface.</change>
         <change>recipes.yml: Shaped recipes now have amounts for each ingredient.</change>
         <change>recipes.yml: Removed 9 ingredient limit from shapeless recipes.</change>
     </release>
 
-    <release version="0.22.2" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.22.2/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.22.2/FastCraftPlus.jar"
+             version="0.22.2" stable="true" md5="65D518A723AFEF1CCC20B27B8E04E00E">
         <change>Fixed FastCraftAPI being in wrong package.</change>
     </release>
 
-    <release version="0.22.1" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.22.1/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.22.1/FastCraftPlus.jar"
+             version="0.22.1" stable="true" md5="769B92D3597FF81F7AAE23E225948CEA">
         <change>Fix duplicated lores in FastCraft+ GUI</change>
     </release>
 
-    <release version="0.22" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.22/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.22/FastCraftPlus.jar"
+             version="0.22" stable="true" md5="942EE07DDBFBEEC310F1D45914E12CEE">
         <change>Added tab completion for commands.</change>
     </release>
 
-    <release version="0.21.3" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.21.3/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.21.3/FastCraftPlus.jar"
+             version="0.21.3" stable="true" md5="CDF030FF764B66BF59D77E6027477AB1">
         <change>Fixed incorrect config header comment encoding</change>
     </release>
 
-    <release version="0.21.2" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.21.2/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.21.2/FastCraftPlus.jar"
+             version="0.21.2" stable="true" md5="A5E49A8C8A69ABCE60CFAAFF0EBE974D">
         <change>Fixed /craft command not checking fastcraft.use permission properly</change>
         <change>Fixed showing when toggling FastCraft+ for another player</change>
         <change>Added Chinese (CN) localization</change>
         <change>Fixed incorrect permissions in code</change>
     </release>
 
-    <release version="0.21.1" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.21.1/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.21.1/FastCraftPlus.jar"
+             version="0.21.1" stable="true" md5="37E424E9C2D889DBC39039CF8293237C">
         <change>Fixed /fc toggle command running without having the required permission</change>
     </release>
 
-    <release version="0.21" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.21/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.21/FastCraftPlus.jar"
+             version="0.21" stable="true" md5="98747DC60BDC9FD902033CAE21E0B60B">
         <change>Made non-op permissions default false.</change>
         <change>Added plugin metrics.</change>
         <change>Updated language files.</change>
         <change>Added crafting multiplier functionality internally.</change>
     </release>
 
-    <release version="0.20.5" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.20.5/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.20.5/FastCraftPlus.jar"
+             version="0.20.5" stable="true" md5="11611961F18EA5A25B4D65C05B448C18">
         <change>Made API methods static.</change>
         <change>Show [FastCraft+] instead of [FastCraftPlus] in console.</change>
     </release>
 
-    <release version="0.20.4" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.20.4/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.20.4/FastCraftPlus.jar"
+             version="0.20.4" stable="true" md5="7F10F0748F1B2657E351D0215B9F736B">
         <change>Fixed NullPointerException with items having null lines in their lore.</change>
     </release>
 
-    <release version="0.20.3" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.20.3/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.20.3/FastCraftPlus.jar"
+             version="0.20.3" stable="true" md5="A87A84896A5D964FE166330DD7063D5E">
         <change>Fixed NullPointerException.</change>
         <change>Removed blacklist.yml missing section messages.</change>
     </release>
 
-    <release version="0.20.2" stable="false" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.20.2/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.20.2/FastCraftPlus.jar"
+             version="0.20.2" stable="false" md5="C7A22D19574923A9D4F2F06477BB4D77">
         <change>Fixed a few performance issues.</change>
     </release>
 
-    <release version="0.20.1" stable="false" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.20.1/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.20.1/FastCraftPlus.jar"
+             version="0.20.1" stable="false" md5="F810B4584E8A928E6A860D28A046F384">
         <change>Fixed issue with permissions.</change>
     </release>
 
-    <release version="0.20" stable="false" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.20/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.20/FastCraftPlus.jar"
+             version="0.20" stable="false" md5="6895CCEBEABD3E6F6BF09745774A72A7">
         <change>Added Dutch (NL) localization.</change>
         <change>Added permissions for blacklist entries.</change>
         <change>Fixed refresh button not functioning.</change>
@@ -105,58 +125,69 @@
         <change>Added API class.</change>
     </release>
 
-    <release version="0.19.4" stable="" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.19.4/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.19.4/FastCraftPlus.jar"
+             version="0.19.4" stable="true" md5="90187BFAC269DC362FC036A2F6874251">
         <change>Changed Turkish from TU to TR.</change>
     </release>
 
-    <release version="0.19.3" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.19.3/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.19.3/FastCraftPlus.jar"
+             version="0.19.3" stable="true" md5="89735551B49B7E183668A997BDB0077C">
         <change>Added Turkish (TU) localization.</change>
     </release>
 
-    <release version="0.19.2" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.19.2/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.19.2/FastCraftPlus.jar"
+             version="0.19.2" stable="true" md5="296E93066D510F4C6DC07F1976ACE6A9">
         <change>Fixed previous/next page buttons showing incorrect page numbers.</change>
         <change>Fixed NullPointerException.</change>
     </release>
 
-    <release version="0.19.1" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.19.1/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.19.1/FastCraftPlus.jar"
+             version="0.19.1" stable="true" md5="E15A6FF824CC996A42B88C197A2B4443">
         <change>Fixed custom display names not appearing.</change>
         <change>Fixed incorrect lang file names in ./FastCraftPlus/lang/</change>
     </release>
 
-    <release version="0.19" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.19/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.19/FastCraftPlus.jar"
+             version="0.19" stable="true" md5="15D3824CF1876926B287B194A3F6A78E">
         <change>Added blacklist for recipes in the FastCraft+ interface.</change>
         <change>Removed some reliance on reflection to broaden server compatibility.</change>
         <change>Updated CS localization.</change>
     </release>
 
-    <release version="0.18" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.18/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.18/FastCraftPlus.jar"
+             version="0.18" stable="true" md5="08E72B66A410C6C6FAE7723410157D26">
         <change>Fixed error when clicking workbench button with an item on the cursor.</change>
         <change>Fixed NullPointerException with Item Maker Pro compatibility.</change>
     </release>
 
-    <release version="0.17" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.17/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.17/FastCraftPlus.jar"
+             version="0.17" stable="true" md5="5705AF162F3149E577CDF3F9A9CCFD99">
         <change>Fixed item names in language files not being used.</change>
         <change>Let CrateReloaded load first, so its /cr command can be used.</change>
     </release>
 
-    <release version="0.16" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.16/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.16/FastCraftPlus.jar"
+             version="0.16" stable="true" md5="A15B5CFAC2D67904413328ADD7AAAE8F">
         <change>Added "/craft" command.</change>
         <change>Added "/fc toggle" command.</change>
         <change>Open inventory when a workbench block is right clicked, instead of when a crafting inventory opens.</change>
         <change>Add space before Ingredients in lore if the item has enchants.</change>
     </release>
 
-    <release version="0.15" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.15/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.15/FastCraftPlus.jar"
+             version="0.15" stable="true" md5="C80C55D23C6BBAAE75303EB3914535FE">
         <change>Disabled unimplemented commands (/fastcraft and /craft)</change>
         <change>Read config files with UTF-8 charset</change>
         <change>Added command-compatibility to config.yml</change>
     </release>
 
-    <release version="0.14" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.14/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.14/FastCraftPlus.jar"
+             version="0.14" stable="true" md5="8416E7AD545ADB52A0C7D3029EC3C950">
         <change>Fixed FastCraft+ interface being disabled after clicking the workbench button.</change>
     </release>
 
-    <release version="0.13" stable="false" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.13/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.13/FastCraftPlus.jar"
+             version="0.13" stable="false" md5="0D3BF0DB2E9D8A63C5B713A6177D04F1">
         <change>Added admin commands.</change>
         <change>Added permissions.</change>
         <change>Config comment headers will be updated on load.</change>
@@ -164,63 +195,75 @@
         <change>Fixed inability to leave empty spaces in custom shaped recipes.</change>
     </release>
 
-    <release version="0.12" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.12/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.12/FastCraftPlus.jar"
+             version="0.12" stable="true" md5="F1BD97769C27E75317395EB059BAAD28">
         <change>Fixed custom item names not showing in the inventory.</change>
         <change>Possible fix for ProRecipes compatibility.</change>
     </release>
 
-    <release version="0.11" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.11/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.11/FastCraftPlus.jar"
+             version="0.11" stable="true" md5="84107D75FAD3DD535BCFE7FC24233402">
         <change>Added compatibility for Bukkit 1.7.2-R0.3</change>
         <change>Updated for Bukkit 1.9.2-R0.1-SNAPSHOT</change>
     </release>
 
-    <release version="0.10" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.10/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.10/FastCraftPlus.jar"
+             version="0.10" stable="true" md5="22A71D7D88401D8EED565585439EE247">
         <change>Fixed bukkit items not showing up in GUI.</change>
         <change>Fixed duplicate items in GUI.</change>
     </release>
 
-    <release version="0.9" stable="false" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.9/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.9/FastCraftPlus.jar"
+             version="0.9" stable="false" md5="21A6F64F46F562DB9B7D999D0B11277F">
         <change>Greatly improved performance.</change>
         <change>Added Russian (RU) language.</change>
         <change>Added item-name to language, so item names in the GUI can be changed.</change>
         <change>Prevent special recipes (book/map cloning, fireworks, etc.) from showing.</change>
     </release>
 
-    <release version="0.8" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.8/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.8/FastCraftPlus.jar"
+             version="0.8" stable="true" md5="C2599C278D307B5F484264AA64C82EAE">
         <change>Fixed NullPointerException in other plugins trying to access items from called crafting events.</change>
     </release>
 
-    <release version="0.7" stable="false" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.7/FastCraftPlus.jar">
+    <release md5="545D659FA01A5B926F29EEE5700E4362" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.7/FastCraftPlus.jar"
+             version="0.7" stable="false">
         <change>Fixed items being crafted with ingredients persisting in their lore.</change>
         <change>Prevent PrepareItemCraftEvent from being called with null parameters.</change>
         <change>Prevent CraftItemEvent from being called without a filled recipe matrix.</change>
     </release>
 
-    <release version="0.6" stable="false" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.6/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.6/FastCraftPlus.jar"
+             version="0.6" stable="false" md5="DFCFB1A1CCE758D1288098A7E9063321">
         <change>Fixed ClassCastException in other plugins.</change>
     </release>
 
-    <release version="0.5" stable="false" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.5/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.5/FastCraftPlus.jar"
+             version="0.5" stable="false" md5="00EDF20B8413E4FB9C5826911E5EA915">
         <change>Added ProRecipes and Item Maker Pro compatibility</change>
         <change>Added Czech (CS) localization.</change>
     </release>
 
-    <release version="0.4" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.4/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.4/FastCraftPlus.jar"
+             version="0.4" stable="true" md5="BF1F59E319724D80F6A332DE82B57A87">
         <change>Added recipes.yml config.</change>
         <change>CraftItemEvent called when crafting.</change>
         <change>Use PrepareItemCraftEvent to see if recipes can be crafted.</change>
         <change>Added German (DE) localization.</change>
     </release>
 
-    <release version="0.3" stable="" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.3/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.3/FastCraftPlus.jar"
+             version="0.3" stable="true" md5="656D5C7123FD53C43AED9E3096282A35">
         <change>Added configuration and localization support.</change>
     </release>
 
-    <release version="0.2" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.2/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.2/FastCraftPlus.jar"
+             version="0.2" stable="true" md5="872AE41DAF9AE3084EE3462E282B708B">
         <change>Added Java 7 Compatibilty.</change>
     </release>
 
-    <release version="0.1" stable="true" url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.1/FastCraftPlus.jar">
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.1/FastCraftPlus.jar"
+             version="0.1" stable="true" md5="B1A663A560AFAF952C99C19750B83AA8">
         <change>First release!</change>
     </release>
 </releases>
