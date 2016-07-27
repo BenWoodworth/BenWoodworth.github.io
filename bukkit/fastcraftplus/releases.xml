@@ -8,7 +8,7 @@
 
 <releases>
     <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24.3/FastCraftPlus.jar"
-             version="0.26" stable="true"> md5="DF5E8A6B832B517824982C33AAC82A55"
+             version="0.26" stable="true" md5="DF5E8A6B832B517824982C33AAC82A55">
         <change>TEST UPDATE.</change>
         <change>Not an actual update.</change>
         <change>For testing purposes.</change>
