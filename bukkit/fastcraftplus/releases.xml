@@ -7,6 +7,16 @@
 -->
 
 <releases>
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.25/FastCraftPlus.jar"
+             version="0.25" stable="?" md5="B2042AAA2BC21F60C4A56930ABF34B65">
+        <change>Added automatic update functionality.</change>
+        <change>Let recipes in the recipes.yml config use & for color codes.</change>
+        <change>Added spaces between config.yml sections.</change>
+        <change>Added debug output option to config.yml.</change>
+        <change>Added methods to the FastCraft+ API.</change>
+        <change>Other internal bug/performance fixes.</change>
+    </release>
+
     <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.24.3/FastCraftPlus.jar"
              version="0.24.3" stable="true" md5="DF5E8A6B832B517824982C33AAC82A55">
         <change>Fixed NullPointerExceptions.</change>
