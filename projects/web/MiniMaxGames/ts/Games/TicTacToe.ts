@@ -1,7 +1,7 @@
-﻿import {Game, GameBoard, Player} from "../MiniMaxGames";
+﻿import {Game, GameBoard, Player} from "../Game";
 
 export class GameTicTacToe extends Game<GameBoardTicTacToe> {
-
+    
     getName(): string {
         return "Tic-Tac-Toe";
     }

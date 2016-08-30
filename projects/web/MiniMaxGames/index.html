@@ -8,15 +8,16 @@
     <script src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
-    <script src="./out.js"></script>
+    <script src="./js/out.js"></script>
 </head>
 <body>
-    <h1>TypeScript HTML App</h1>
-
-    <div id="content"></div>
+    <div id="content">CONTENT</div>
 
     <script>
-        require(["app"]);
+        var container = document.getElementById("content");
+        var m = new require(["GameManager"]);
+        var manager = new m.GameManager(container);
+        manager.render();
     </script>
 </body>
 </html>

@@ -6,7 +6,7 @@
         "noImplicitAny": true,
         "removeComments": true,
 
-        "outFile": "./MiniMaxGames.js"
+        "outFile": "./js/out.js"
     },
     "files": [
         "app.ts"
