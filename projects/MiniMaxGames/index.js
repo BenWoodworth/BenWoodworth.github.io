@@ -16,10 +16,11 @@ define("src/state", ["require", "exports"], function (require, exports) {
             var _this = this;
             var button = document.createElement("button");
             button.disabled = this.getActions().indexOf(action) < 0;
+            button.style.padding = "0";
             button.style.width = "100%";
             button.style.height = "100%";
             button.textContent = text;
-            button.onclick = function () { return _this.act(action); };
+            button.onclick = function (e) { return _this.act(action); };
             return button;
         };
         return State;
@@ -156,22 +157,23 @@ define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (re
         };
         GameBoardTicTacToe.prototype.createBoard = function (container) {
             var table = document.createElement("table");
-            var tbody = document.createElement("tbody");
-            table.appendChild(tbody);
-            table.style.width = "50vh";
-            table.style.height = "50vh";
+            container.appendChild(table);
+            table.style.width = "100%";
+            table.style.height = "100%";
             for (var row = 0; row < 9; row += 3) {
                 var tr = document.createElement("tr");
-                tbody.appendChild(tr);
+                table.appendChild(tr);
                 for (var col = 0; col < 3; col++) {
                     var i = row + col;
-                    var td = document.createElement("td");
                     var text = "";
                     if (this.board[i] != null) {
                         text = this.board[i] == game_1.Player.Player1 ? "X" : "O";
                     }
+                    var td = document.createElement("td");
+                    td.textContent = text;
+                    td.style.padding = "0";
                     var button = this.getGame().createActionButton(row + col, text);
-                    tbody.appendChild(td).appendChild(button);
+                    tr.appendChild(td).appendChild(button);
                 }
             }
         };
@@ -222,20 +224,25 @@ define("src/game-manager", ["require", "exports", "src/state", "src/games/tic-ta
         };
         MenuState.prototype.act = function (action) {
             var game = this.games[action];
+            this.getGameManager().setState(game);
         };
         MenuState.prototype.create = function (container) {
-            alert("creating table...");
             var table = document.createElement("table");
-            var tbody = document.createElement("tbody");
-            table.appendChild(tbody);
+            table.style.width = "100%";
+            container.appendChild(table);
+            var headRow = document.createElement("tr");
+            var header = document.createElement("th");
+            header.innerText = "Select a game";
+            table.appendChild(headRow).appendChild(header);
             var actions = this.getActions();
             for (var _i = 0, actions_1 = actions; _i < actions_1.length; _i++) {
                 var i = actions_1[_i];
                 var tr = document.createElement("tr");
                 var td = document.createElement("td");
-                tbody.appendChild(tr).appendChild(td);
+                tr.style.height = "30pt";
+                table.appendChild(tr).appendChild(td);
                 var game = this.games[actions[i]];
-                var text = "{game.getName()} - {game.getDesc()}";
+                var text = game.getName() + " - " + game.getDesc();
                 var button = this.createActionButton(actions[i], text);
                 td.appendChild(button);
             }

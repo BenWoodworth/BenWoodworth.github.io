@@ -33,10 +33,11 @@ export abstract class State {
     public createActionButton(action: number, text: string) {
         var button = document.createElement("button");
         button.disabled = this.getActions().indexOf(action) < 0;
+        button.style.padding = "0";
         button.style.width = "100%";
         button.style.height = "100%";
         button.textContent = text;
-        button.onclick = () => this.act(action);
+        button.onclick = e => this.act(action);
         return button;
     }
 }

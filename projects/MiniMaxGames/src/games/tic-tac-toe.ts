@@ -92,30 +92,31 @@ export class GameBoardTicTacToe extends GameBoard<GameTicTacToe> {
     createBoard(container: HTMLElement): void {
         // Create table
         let table = document.createElement("table");
-        let tbody = document.createElement("tbody");
-        table.appendChild(tbody);
+        container.appendChild(table);
 
         // Style the table
-        table.style.width = "50vh";
-        table.style.height = "50vh";
+        table.style.width = "100%";
+        table.style.height = "100%";
 
         // Populate table with buttons
         for (let row = 0; row < 9; row += 3) {
             // Add row and cell to table
             let tr = document.createElement("tr");
-            tbody.appendChild(tr);
+            table.appendChild(tr);
 
             for (let col = 0; col < 3; col++) {
                 let i = row + col;
 
-                let td = document.createElement("td");
                 let text = "";
                 if (this.board[i] != null) {
                     text = this.board[i] == Player.Player1 ? "X" : "O";
                 }
+                let td = document.createElement("td");
+                td.textContent = text;
+                td.style.padding = "0";
 
                 let button = this.getGame().createActionButton(row + col, text);
-                tbody.appendChild(td).appendChild(button);
+                tr.appendChild(td).appendChild(button);
             }
         }
     }

@@ -59,14 +59,20 @@ class MenuState extends State {
 
     public act(action: number) {
         let game = this.games[action];
+        this.getGameManager().setState(game);
     }
 
     public create(container: HTMLElement) {
-        alert("creating table...");
         // Create table
         let table = document.createElement("table");
-        let tbody = document.createElement("tbody");
-        table.appendChild(tbody);
+        table.style.width = "100%";
+        container.appendChild(table);
+
+        // Insert header
+        let headRow = document.createElement("tr");
+        let header = document.createElement("th")
+        header.innerText = "Select a game";
+        table.appendChild(headRow).appendChild(header);
 
         // Populate table with buttons
         let actions = this.getActions();
@@ -74,11 +80,12 @@ class MenuState extends State {
             // Add row and cell to table
             let tr = document.createElement("tr");
             let td = document.createElement("td");
-            tbody.appendChild(tr).appendChild(td);
+            tr.style.height = "30pt";
+            table.appendChild(tr).appendChild(td);
 
             // Add button to table cell
             let game = this.games[actions[i]];
-            let text = `{game.getName()} - {game.getDesc()}`;
+            let text = `${game.getName()} - ${game.getDesc()}`;
             let button = this.createActionButton(actions[i], text);
             td.appendChild(button);
         }
