@@ -1,4 +1,4 @@
-import {GameManager} from "./src/gameManager";
+import {GameManager} from "./src/game-manager";
 
 let container = document.getElementById("content");
 let manager = new GameManager(container);

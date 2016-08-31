@@ -1,4 +1,4 @@
-import {GameManager} from "./gameManager";
+import {GameManager} from "./game-manager";
 
 export abstract class State {
 

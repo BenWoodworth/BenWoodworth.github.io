@@ -79,7 +79,7 @@ define("src/game", ["require", "exports", "src/state"], function (require, expor
     }());
     exports.GameBoard = GameBoard;
 });
-define("src/games/gameTicTacToe", ["require", "exports", "src/game"], function (require, exports, game_1) {
+define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (require, exports, game_1) {
     "use strict";
     var GameTicTacToe = (function (_super) {
         __extends(GameTicTacToe, _super);
@@ -179,7 +179,7 @@ define("src/games/gameTicTacToe", ["require", "exports", "src/game"], function (
     }(game_1.GameBoard));
     exports.GameBoardTicTacToe = GameBoardTicTacToe;
 });
-define("src/gameManager", ["require", "exports", "src/state", "src/games/gameTicTacToe"], function (require, exports, state_2, TicTacToe) {
+define("src/game-manager", ["require", "exports", "src/state", "src/games/tic-tac-toe"], function (require, exports, state_2, TicTacToe) {
     "use strict";
     var GameManager = (function () {
         function GameManager(container) {
@@ -224,6 +224,7 @@ define("src/gameManager", ["require", "exports", "src/state", "src/games/gameTic
             var game = this.games[action];
         };
         MenuState.prototype.create = function (container) {
+            alert("creating table...");
             var table = document.createElement("table");
             var tbody = document.createElement("tbody");
             table.appendChild(tbody);
@@ -242,10 +243,9 @@ define("src/gameManager", ["require", "exports", "src/state", "src/games/gameTic
         return MenuState;
     }(state_2.State));
 });
-define("index", ["require", "exports", "src/gameManager"], function (require, exports, gameManager_1) {
+define("index", ["require", "exports", "src/game-manager"], function (require, exports, game_manager_1) {
     "use strict";
     var container = document.getElementById("content");
-    var manager = new gameManager_1.GameManager(container);
+    var manager = new game_manager_1.GameManager(container);
     manager.render();
-    alert("Hello world!");
 });
