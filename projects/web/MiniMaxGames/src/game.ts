@@ -1,4 +1,5 @@
-﻿import {GameManager, State} from "./GameManager";
+﻿import {State} from "./state";
+import {GameManager} from "./gameManager";
 
 /**
  * A player that will play a game.

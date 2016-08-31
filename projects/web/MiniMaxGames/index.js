@@ -3,34 +3,8 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define("GameManager", ["require", "exports"], function (require, exports) {
+define("src/state", ["require", "exports"], function (require, exports) {
     "use strict";
-    var GameManager = (function () {
-        function GameManager(container) {
-            this.container = container;
-            this.menu = new MenuState(this);
-            this.state = this.menu;
-        }
-        GameManager.prototype.getContainer = function () {
-            return this.container;
-        };
-        GameManager.prototype.loadMenu = function () {
-            this.setState(this.menu);
-        };
-        GameManager.prototype.setState = function (state) {
-            this.state = state;
-            this.render();
-        };
-        GameManager.prototype.getState = function () {
-            return this.state;
-        };
-        GameManager.prototype.render = function () {
-            this.container.innerHTML = null;
-            this.state.create(this.container);
-        };
-        return GameManager;
-    }());
-    exports.GameManager = GameManager;
     var State = (function () {
         function State(gameManager) {
             this.gameManager = gameManager;
@@ -51,40 +25,9 @@ define("GameManager", ["require", "exports"], function (require, exports) {
         return State;
     }());
     exports.State = State;
-    var MenuState = (function (_super) {
-        __extends(MenuState, _super);
-        function MenuState() {
-            _super.apply(this, arguments);
-            this.games = [
-                new GameTicTacToe(this.getGameManager())
-            ];
-        }
-        MenuState.prototype.getActions = function () {
-            var result = [];
-            this.games.forEach(function (g) { return result.push(result.length); });
-            return result;
-        };
-        MenuState.prototype.act = function (action) {
-            var game = this.games[action];
-        };
-        MenuState.prototype.create = function (container) {
-            var table = document.createElement("table");
-            var tbody = document.createElement("tbody");
-            table.appendChild(tbody);
-            var actions = this.getActions();
-            for (var _i = 0, actions_1 = actions; _i < actions_1.length; _i++) {
-                var i = actions_1[_i];
-                var tr = document.createElement("tr");
-                var td = document.createElement("td");
-                tbody.appendChild(tr).appendChild(td);
-                var game = this.games[actions[i]];
-                var text = "{game.getName()} - {game.getDesc()}";
-                var button = this.createActionButton(actions[i], text);
-                td.appendChild(button);
-            }
-        };
-        return MenuState;
-    }(State));
+});
+define("src/game", ["require", "exports", "src/state"], function (require, exports, state_1) {
+    "use strict";
     (function (Player) {
         Player[Player["Player1"] = 0] = "Player1";
         Player[Player["Player2"] = 1] = "Player2";
@@ -110,7 +53,7 @@ define("GameManager", ["require", "exports"], function (require, exports) {
             this.getBoard().move(action);
         };
         return Game;
-    }(State));
+    }(state_1.State));
     exports.Game = Game;
     var GameBoard = (function () {
         function GameBoard(game, turn) {
@@ -135,6 +78,9 @@ define("GameManager", ["require", "exports"], function (require, exports) {
         return GameBoard;
     }());
     exports.GameBoard = GameBoard;
+});
+define("src/games/gameTicTacToe", ["require", "exports", "src/game"], function (require, exports, game_1) {
+    "use strict";
     var GameTicTacToe = (function (_super) {
         __extends(GameTicTacToe, _super);
         function GameTicTacToe() {
@@ -150,7 +96,7 @@ define("GameManager", ["require", "exports"], function (require, exports) {
             return "The classic game of X's and O's";
         };
         return GameTicTacToe;
-    }(Game));
+    }(game_1.Game));
     exports.GameTicTacToe = GameTicTacToe;
     var GameBoardTicTacToe = (function (_super) {
         __extends(GameBoardTicTacToe, _super);
@@ -169,9 +115,9 @@ define("GameManager", ["require", "exports"], function (require, exports) {
         GameBoardTicTacToe.prototype.move = function (move) {
             if (this.board[move] != null || this.isGameOver())
                 return null;
-            var result = new GameBoardTicTacToe(this.getGame(), this.getTurn() === Player.Player1
-                ? Player.Player2
-                : Player.Player1);
+            var result = new GameBoardTicTacToe(this.getGame(), this.getTurn() === game_1.Player.Player1
+                ? game_1.Player.Player2
+                : game_1.Player.Player1);
             result.board = this.board.slice(0);
             result.board[move] = this.getTurn();
             return result;
@@ -222,7 +168,7 @@ define("GameManager", ["require", "exports"], function (require, exports) {
                     var td = document.createElement("td");
                     var text = "";
                     if (this.board[i] != null) {
-                        text = this.board[i] == Player.Player1 ? "X" : "O";
+                        text = this.board[i] == game_1.Player.Player1 ? "X" : "O";
                     }
                     var button = this.getGame().createActionButton(row + col, text);
                     tbody.appendChild(td).appendChild(button);
@@ -230,13 +176,76 @@ define("GameManager", ["require", "exports"], function (require, exports) {
             }
         };
         return GameBoardTicTacToe;
-    }(GameBoard));
+    }(game_1.GameBoard));
     exports.GameBoardTicTacToe = GameBoardTicTacToe;
 });
-define("app", ["require", "exports", "GameManager"], function (require, exports, GameManager_1) {
+define("src/gameManager", ["require", "exports", "src/state", "src/games/gameTicTacToe"], function (require, exports, state_2, TicTacToe) {
+    "use strict";
+    var GameManager = (function () {
+        function GameManager(container) {
+            this.container = container;
+            this.menu = new MenuState(this);
+            this.state = this.menu;
+        }
+        GameManager.prototype.getContainer = function () {
+            return this.container;
+        };
+        GameManager.prototype.loadMenu = function () {
+            this.setState(this.menu);
+        };
+        GameManager.prototype.setState = function (state) {
+            this.state = state;
+            this.render();
+        };
+        GameManager.prototype.getState = function () {
+            return this.state;
+        };
+        GameManager.prototype.render = function () {
+            this.container.innerHTML = null;
+            this.state.create(this.container);
+        };
+        return GameManager;
+    }());
+    exports.GameManager = GameManager;
+    var MenuState = (function (_super) {
+        __extends(MenuState, _super);
+        function MenuState() {
+            _super.apply(this, arguments);
+            this.games = [
+                new TicTacToe.GameTicTacToe(this.getGameManager())
+            ];
+        }
+        MenuState.prototype.getActions = function () {
+            var result = [];
+            this.games.forEach(function (g) { return result.push(result.length); });
+            return result;
+        };
+        MenuState.prototype.act = function (action) {
+            var game = this.games[action];
+        };
+        MenuState.prototype.create = function (container) {
+            var table = document.createElement("table");
+            var tbody = document.createElement("tbody");
+            table.appendChild(tbody);
+            var actions = this.getActions();
+            for (var _i = 0, actions_1 = actions; _i < actions_1.length; _i++) {
+                var i = actions_1[_i];
+                var tr = document.createElement("tr");
+                var td = document.createElement("td");
+                tbody.appendChild(tr).appendChild(td);
+                var game = this.games[actions[i]];
+                var text = "{game.getName()} - {game.getDesc()}";
+                var button = this.createActionButton(actions[i], text);
+                td.appendChild(button);
+            }
+        };
+        return MenuState;
+    }(state_2.State));
+});
+define("index", ["require", "exports", "src/gameManager"], function (require, exports, gameManager_1) {
     "use strict";
     var container = document.getElementById("content");
-    var manager = new GameManager_1.GameManager(container);
+    var manager = new gameManager_1.GameManager(container);
     manager.render();
     alert("Hello world!");
 });
