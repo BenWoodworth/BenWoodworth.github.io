@@ -1,6 +1,6 @@
 import {State} from "./state";
 import {Game, GameBoard, Player} from "./game";
-import * as TicTacToe from "./games/gameTicTacToe";
+import * as TicTacToe from "./games/tic-tac-toe";
 
 export class GameManager {
     private menu: State = new MenuState(this);
@@ -62,6 +62,7 @@ class MenuState extends State {
     }
 
     public create(container: HTMLElement) {
+        alert("creating table...");
         // Create table
         let table = document.createElement("table");
         let tbody = document.createElement("tbody");
