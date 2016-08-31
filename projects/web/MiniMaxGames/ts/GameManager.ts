@@ -3,9 +3,9 @@ import * as TicTacToe from "./Games/TicTacToe";
 
 export class GameManager {
     private menu: State = new MenuState(this);
-    private state: State =this.menu;
+    private state: State = this.menu;
 
-    constructor(public container: HTMLElement) {}
+    constructor(public container: HTMLElement) { }
 
     /**
      * Get the containing HTML element.
@@ -46,8 +46,8 @@ export class GameManager {
 }
 
 export abstract class State {
-    
-    constructor(private gameManager: GameManager) {}
+
+    constructor(private gameManager: GameManager) { }
 
     /**
      * Get this state's GameManager
@@ -75,7 +75,7 @@ export abstract class State {
      * Create a button that will execute an action when clicked.
      * The button fills its container's width and height.
      */
-    protected createActionButton(action: number, text: string) {
+    public createActionButton(action: number, text: string) {
         var button = document.createElement("button");
         button.disabled = this.getActions().indexOf(action) < 0;
         button.style.width = "100%";
@@ -111,15 +111,15 @@ class MenuState extends State {
         let actions = this.getActions();
         for (let i of actions) {
             // Add row and cell to table
-            let row = document.createElement("tr");
-            let col = document.createElement("td");
-            tbody.appendChild(row).appendChild(col);
+            let tr = document.createElement("tr");
+            let td = document.createElement("td");
+            tbody.appendChild(tr).appendChild(td);
 
             // Add button to table cell
             let game = this.games[actions[i]];
             let text = `{game.getName()} - {game.getDesc()}`;
             let button = this.createActionButton(actions[i], text);
-            col.appendChild(button);
+            td.appendChild(button);
         }
     }
 }

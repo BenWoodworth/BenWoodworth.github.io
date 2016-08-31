@@ -7,8 +7,9 @@
         "removeComments": true,
 
         "outFile": "./js/out.js"
+        //"outDir": "./js/"
     },
     "files": [
-        "app.ts"
+        "ts/app.ts"
     ]
 }

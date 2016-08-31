@@ -11,7 +11,38 @@ export enum Player {
 /**
  * A game that provides access to a new game board.
  */
-export abstract class Game<TGameBoard extends GameBoard> extends State {
+export abstract class Game extends State {
+    private board = this.createBoard(Player.Player1);
+
+    constructor(gameManager: GameManager) {
+        super(gameManager);
+        this.createBoard(Player.Player1);
+    }
+
+    /**
+     * Create a new board with the specified player
+     * having the first move.
+     */
+    protected abstract createBoard(firstMove: Player): GameBoard<Game>;
+
+    /**
+     * Get the current game board.
+     */
+    protected getBoard(): GameBoard<Game> {
+        return this.board;
+    }
+
+    public create(container: HTMLElement) {
+        this.getBoard().createBoard(container);
+    }
+
+    public getActions() {
+        return this.getBoard().getAvailableMoves();
+    }
+
+    public act(action: number) {
+        this.getBoard().move(action);
+    }
 
     /**
      * Get the name of this game.
@@ -22,24 +53,25 @@ export abstract class Game<TGameBoard extends GameBoard> extends State {
      * Get a description of this game.
      */
     abstract getDesc(): string;
-
-    /**
-     * Get the board for a new game.
-     * @param firstMove The first player to move.
-     */
-    abstract getNewBoard(firstMove: Player): TGameBoard;
 }
 
 /**
  * A board that a game can be played on.
  */
-export abstract class GameBoard {
+export abstract class GameBoard<TGame extends Game> {
 
     /**
      * Create a new instance of the GameBoard.
      * @param turn The first player to move.
      */
-    constructor(private turn: Player) { }
+    constructor(private game: TGame, private turn: Player) { }
+
+    /**
+     * Get the game this GameBoard is for
+     */
+    getGame(): TGame {
+        return this.game;
+    }
 
     /**
      * Get whose turn it is, or null if the game has ended.
@@ -79,7 +111,7 @@ export abstract class GameBoard {
      * Move as the current player on a copy of the current game board.
      * @param move The move the current player wants to make.
      */
-    abstract move(move: number): GameBoard;
+    abstract move(move: number): GameBoard<TGame>;
 
     /**
      * Get the score for a player.
@@ -97,5 +129,5 @@ export abstract class GameBoard {
     /**
      * Create a board within the provided container
      */
-    abstract createBoard(container: HTMLElement): string;
+    abstract createBoard(container: HTMLElement): void;
 }

@@ -1,31 +1,31 @@
-﻿import {Game, GameBoard, Player} from "../MiniMaxGames";
+﻿import {Game, GameBoard, Player} from "../Game";
 
-export class GameNAME extends Game<GameBoardNAME> {
+export class GameNAME extends Game {
+
+    protected createBoard(firstMove: Player) {
+        return new GameBoardNAME(this, firstMove);
+    }
 
     getName(): string {
         // TODO
         return null;
     }
-    
+
     getDesc(): string {
-        // TODO
-        return null;
-    }
-    
-    getNewBoard(firstMove: Player): GameBoardNAME {
         // TODO
         return null;
     }
 }
 
-export class GameBoardNAME extends GameBoard {
+export class GameBoardNAME extends GameBoard<GameNAME> {
+    private board: Player[] = [];
 
     getAvailableMoves(): number[] {
         // TODO
         return null;
     }
 
-    move(move: number): GameBoard {
+    move(move: number): GameBoardNAME {
         // TODO
         return null;
     }
@@ -40,8 +40,12 @@ export class GameBoardNAME extends GameBoard {
         return null;
     }
 
-    getBoardHtml(): string {
+    private getWinner(): Player {
         // TODO
         return null;
+    }
+
+    createBoard(container: HTMLElement): void {
+        // TODO
     }
 }

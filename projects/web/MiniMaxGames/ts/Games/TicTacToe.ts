@@ -1,7 +1,11 @@
 ﻿import {Game, GameBoard, Player} from "../Game";
 
-export class GameTicTacToe extends Game<GameBoardTicTacToe> {
-    
+export class GameTicTacToe extends Game {
+
+    protected createBoard(firstMove: Player) {
+        return new GameBoardTicTacToe(this, firstMove);
+    }
+
     getName(): string {
         return "Tic-Tac-Toe";
     }
@@ -9,39 +13,28 @@ export class GameTicTacToe extends Game<GameBoardTicTacToe> {
     getDesc(): string {
         return "The classic game of X's and O's";
     }
-
-    getNewBoard(firstMove: Player): GameBoardTicTacToe {
-        return new GameBoardTicTacToe(firstMove);
-    }
 }
 
-export class GameBoardTicTacToe extends GameBoard {
-    private size = 9;
+export class GameBoardTicTacToe extends GameBoard<GameTicTacToe> {
     private board: Player[] = [];
-
-    constructor(turn: Player) {
-        super(turn);
-        for (let i = 0; i < 9; i++) {
-            this.board[i] = null;
-        }
-    }
 
     getAvailableMoves(): number[] {
         const moves: number[] = [];
 
         // List all empty space moves
-        for (let i = 0; this.board[i] !== undefined; i++) {
+        for (let i = 0; i < 9; i++) {
             if (this.board[i] == null) moves.push(i);
         }
 
         return moves;
     }
 
-    move(move: number): GameBoard {
+    move(move: number): GameBoardTicTacToe {
         if (this.board[move] != null || this.isGameOver()) return null;
 
         // Create a new board
         const result = new GameBoardTicTacToe(
+            this.getGame(),
             this.getTurn() === Player.Player1
                 ? Player.Player2
                 : Player.Player1);
@@ -96,27 +89,34 @@ export class GameBoardTicTacToe extends GameBoard {
         return null;
     }
 
-    getBoardHtml(): string {
-        const mb = (i: number) => this.mb(i, this.ch(i));
+    createBoard(container: HTMLElement): void {
+        // Create table
+        let table = document.createElement("table");
+        let tbody = document.createElement("tbody");
+        table.appendChild(tbody);
 
-        return `<table style="width: 200px; height: 200px;">
-                    <tr><td>${mb(0)}</td><td>${mb(1)}</td><td>${mb(2)}</td></tr>
-                    <tr><td>${mb(6)}</td><td>${mb(7)}</td><td>${mb(8)}</td></tr>
-                    <tr><td>${mb(3)}</td><td>${mb(4)}</td><td>${mb(5)}</td></tr>
-                </table>`;
-    }
+        // Style the table
+        table.style.width = "50vh";
+        table.style.height = "50vh";
 
-    /**
-     * Helper function that gets an X or an O for a board index.
-     * @param i The index in the board to get the character for.
-     */
-    private ch(i: number): string {
-        switch (this.board[i]) {
-            case Player.Player1:
-                return "X";
-            case Player.Player2:
-                return "O";
+        // Populate table with buttons
+        for (let row = 0; row < 9; row += 3) {
+            // Add row and cell to table
+            let tr = document.createElement("tr");
+            tbody.appendChild(tr);
+
+            for (let col = 0; col < 3; col++) {
+                let i = row + col;
+
+                let td = document.createElement("td");
+                let text = "";
+                if (this.board[i] != null) {
+                    text = this.board[i] == Player.Player1 ? "X" : "O";
+                }
+
+                let button = this.getGame().createActionButton(row + col, text);
+                tbody.appendChild(td).appendChild(button);
+            }
         }
-        return " ";
     }
 }

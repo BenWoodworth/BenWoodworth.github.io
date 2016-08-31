@@ -3,23 +3,123 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-define("ts/MiniMaxGames", ["require", "exports"], function (require, exports) {
+define("GameManager", ["require", "exports"], function (require, exports) {
     "use strict";
+    var GameManager = (function () {
+        function GameManager(container) {
+            this.container = container;
+            this.menu = new MenuState(this);
+            this.state = this.menu;
+        }
+        GameManager.prototype.getContainer = function () {
+            return this.container;
+        };
+        GameManager.prototype.loadMenu = function () {
+            this.setState(this.menu);
+        };
+        GameManager.prototype.setState = function (state) {
+            this.state = state;
+            this.render();
+        };
+        GameManager.prototype.getState = function () {
+            return this.state;
+        };
+        GameManager.prototype.render = function () {
+            this.container.innerHTML = null;
+            this.state.create(this.container);
+        };
+        return GameManager;
+    }());
+    exports.GameManager = GameManager;
+    var State = (function () {
+        function State(gameManager) {
+            this.gameManager = gameManager;
+        }
+        State.prototype.getGameManager = function () {
+            return this.gameManager;
+        };
+        State.prototype.createActionButton = function (action, text) {
+            var _this = this;
+            var button = document.createElement("button");
+            button.disabled = this.getActions().indexOf(action) < 0;
+            button.style.width = "100%";
+            button.style.height = "100%";
+            button.textContent = text;
+            button.onclick = function () { return _this.act(action); };
+            return button;
+        };
+        return State;
+    }());
+    exports.State = State;
+    var MenuState = (function (_super) {
+        __extends(MenuState, _super);
+        function MenuState() {
+            _super.apply(this, arguments);
+            this.games = [
+                new GameTicTacToe(this.getGameManager())
+            ];
+        }
+        MenuState.prototype.getActions = function () {
+            var result = [];
+            this.games.forEach(function (g) { return result.push(result.length); });
+            return result;
+        };
+        MenuState.prototype.act = function (action) {
+            var game = this.games[action];
+        };
+        MenuState.prototype.create = function (container) {
+            var table = document.createElement("table");
+            var tbody = document.createElement("tbody");
+            table.appendChild(tbody);
+            var actions = this.getActions();
+            for (var _i = 0, actions_1 = actions; _i < actions_1.length; _i++) {
+                var i = actions_1[_i];
+                var tr = document.createElement("tr");
+                var td = document.createElement("td");
+                tbody.appendChild(tr).appendChild(td);
+                var game = this.games[actions[i]];
+                var text = "{game.getName()} - {game.getDesc()}";
+                var button = this.createActionButton(actions[i], text);
+                td.appendChild(button);
+            }
+        };
+        return MenuState;
+    }(State));
     (function (Player) {
         Player[Player["Player1"] = 0] = "Player1";
         Player[Player["Player2"] = 1] = "Player2";
     })(exports.Player || (exports.Player = {}));
     var Player = exports.Player;
-    var Game = (function () {
-        function Game() {
+    var Game = (function (_super) {
+        __extends(Game, _super);
+        function Game(gameManager) {
+            _super.call(this, gameManager);
+            this.board = this.createBoard(Player.Player1);
+            this.createBoard(Player.Player1);
         }
+        Game.prototype.getBoard = function () {
+            return this.board;
+        };
+        Game.prototype.create = function (container) {
+            this.getBoard().createBoard(container);
+        };
+        Game.prototype.getActions = function () {
+            return this.getBoard().getAvailableMoves();
+        };
+        Game.prototype.act = function (action) {
+            this.getBoard().move(action);
+        };
         return Game;
-    }());
+    }(State));
     exports.Game = Game;
     var GameBoard = (function () {
-        function GameBoard(turn) {
+        function GameBoard(game, turn) {
+            this.game = game;
             this.turn = turn;
         }
+        GameBoard.prototype.getGame = function () {
+            return this.game;
+        };
         GameBoard.prototype.getTurn = function () {
             return this.turn;
         };
@@ -32,49 +132,35 @@ define("ts/MiniMaxGames", ["require", "exports"], function (require, exports) {
         GameBoard.prototype.endGame = function () {
             this.turn = null;
         };
-        GameBoard.prototype.mb = function (move, text) {
-            var disabled = this.getAvailableMoves().indexOf(move) < 0;
-            return "<button class=\"mmg-move-button\" data-mmg-move=\"" + move + "\"\n                " + (disabled ? "disabled" : "") + " style=\"width: 100%; height: 100%;\">" + text + "</button>";
-        };
         return GameBoard;
     }());
     exports.GameBoard = GameBoard;
-});
-define("ts/Games/TicTacToe", ["require", "exports", "ts/MiniMaxGames"], function (require, exports, MiniMaxGames) {
-    "use strict";
-    var Game = MiniMaxGames.Game;
-    var GameBoard = MiniMaxGames.GameBoard;
-    var Player = MiniMaxGames.Player;
     var GameTicTacToe = (function (_super) {
         __extends(GameTicTacToe, _super);
         function GameTicTacToe() {
             _super.apply(this, arguments);
         }
+        GameTicTacToe.prototype.createBoard = function (firstMove) {
+            return new GameBoardTicTacToe(this, firstMove);
+        };
         GameTicTacToe.prototype.getName = function () {
             return "Tic-Tac-Toe";
         };
         GameTicTacToe.prototype.getDesc = function () {
             return "The classic game of X's and O's";
         };
-        GameTicTacToe.prototype.getNewBoard = function (firstMove) {
-            return new GameBoardTicTacToe(firstMove);
-        };
         return GameTicTacToe;
     }(Game));
     exports.GameTicTacToe = GameTicTacToe;
     var GameBoardTicTacToe = (function (_super) {
         __extends(GameBoardTicTacToe, _super);
-        function GameBoardTicTacToe(turn) {
-            _super.call(this, turn);
-            this.size = 9;
+        function GameBoardTicTacToe() {
+            _super.apply(this, arguments);
             this.board = [];
-            for (var i = 0; i < 9; i++) {
-                this.board[i] = null;
-            }
         }
         GameBoardTicTacToe.prototype.getAvailableMoves = function () {
             var moves = [];
-            for (var i = 0; this.board[i] !== undefined; i++) {
+            for (var i = 0; i < 9; i++) {
                 if (this.board[i] == null)
                     moves.push(i);
             }
@@ -83,7 +169,7 @@ define("ts/Games/TicTacToe", ["require", "exports", "ts/MiniMaxGames"], function
         GameBoardTicTacToe.prototype.move = function (move) {
             if (this.board[move] != null || this.isGameOver())
                 return null;
-            var result = new GameBoardTicTacToe(this.getTurn() === Player.Player1
+            var result = new GameBoardTicTacToe(this.getGame(), this.getTurn() === Player.Player1
                 ? Player.Player2
                 : Player.Player1);
             result.board = this.board.slice(0);
@@ -122,49 +208,35 @@ define("ts/Games/TicTacToe", ["require", "exports", "ts/MiniMaxGames"], function
             }
             return null;
         };
-        GameBoardTicTacToe.prototype.getBoardHtml = function () {
-            var _this = this;
-            var mb = function (i) { return _this.mb(i, _this.ch(i)); };
-            return "<table style=\"width: 200px; height: 200px;\">\n                    <tr><td>" + mb(0) + "</td><td>" + mb(1) + "</td><td>" + mb(2) + "</td></tr>\n                    <tr><td>" + mb(6) + "</td><td>" + mb(7) + "</td><td>" + mb(8) + "</td></tr>\n                    <tr><td>" + mb(3) + "</td><td>" + mb(4) + "</td><td>" + mb(5) + "</td></tr>\n                </table>";
-        };
-        GameBoardTicTacToe.prototype.ch = function (i) {
-            switch (this.board[i]) {
-                case Player.Player1:
-                    return "X";
-                case Player.Player2:
-                    return "O";
+        GameBoardTicTacToe.prototype.createBoard = function (container) {
+            var table = document.createElement("table");
+            var tbody = document.createElement("tbody");
+            table.appendChild(tbody);
+            table.style.width = "50vh";
+            table.style.height = "50vh";
+            for (var row = 0; row < 9; row += 3) {
+                var tr = document.createElement("tr");
+                tbody.appendChild(tr);
+                for (var col = 0; col < 3; col++) {
+                    var i = row + col;
+                    var td = document.createElement("td");
+                    var text = "";
+                    if (this.board[i] != null) {
+                        text = this.board[i] == Player.Player1 ? "X" : "O";
+                    }
+                    var button = this.getGame().createActionButton(row + col, text);
+                    tbody.appendChild(td).appendChild(button);
+                }
             }
-            return " ";
         };
         return GameBoardTicTacToe;
     }(GameBoard));
     exports.GameBoardTicTacToe = GameBoardTicTacToe;
 });
-define("app", ["require", "exports", "ts/MiniMaxGames", "ts/Games/TicTacToe"], function (require, exports, MiniMaxGames, TicTacToe) {
+define("app", ["require", "exports", "GameManager"], function (require, exports, GameManager_1) {
     "use strict";
-    var Player = MiniMaxGames.Player;
-    var GameView = (function () {
-        function GameView() {
-            this.games = [
-                new TicTacToe.GameTicTacToe()
-            ];
-            this.curGame = this.games[0];
-            this.curBoard = this.curGame.getNewBoard(Player.Player1);
-        }
-        GameView.prototype.getHtml = function () {
-            return this.curGame == null
-                ? this.getMenuHtml()
-                : this.getBoardHtml();
-        };
-        GameView.prototype.getMenuHtml = function () {
-            return "<p>Select a game:</p>\n                <p>0) Tic-Tac-Toe</p>";
-        };
-        GameView.prototype.getBoardHtml = function () {
-            return "<p><b>" + this.curGame.getName() + "</b> - " + this.curGame.getDesc() + "</p>\n                <p style=\"font: 'lucida console'\">\n                    " + this.curBoard.getBoardHtml() + "\n                </p>";
-        };
-        return GameView;
-    }());
-    var content = document.getElementById("content");
-    var view = new GameView();
-    content.innerHTML = view.getHtml();
+    var container = document.getElementById("content");
+    var manager = new GameManager_1.GameManager(container);
+    manager.render();
+    alert("Hello world!");
 });
