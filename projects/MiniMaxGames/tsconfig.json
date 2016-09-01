@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "watch": true,
         "outFile": "index.js",
         "target": "es5",
         "module": "amd",

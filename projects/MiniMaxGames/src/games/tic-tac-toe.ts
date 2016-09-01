@@ -2,7 +2,7 @@
 
 export class GameTicTacToe extends Game {
 
-    protected createBoard(firstMove: Player) {
+    protected createBoard(firstMove: Player): GameBoardTicTacToe {
         return new GameBoardTicTacToe(this, firstMove);
     }
 
@@ -15,7 +15,7 @@ export class GameTicTacToe extends Game {
     }
 }
 
-export class GameBoardTicTacToe extends GameBoard<GameTicTacToe> {
+export class GameBoardTicTacToe extends GameBoard {
     private board: Player[] = [];
 
     getAvailableMoves(): number[] {
@@ -102,6 +102,7 @@ export class GameBoardTicTacToe extends GameBoard<GameTicTacToe> {
         for (let row = 0; row < 9; row += 3) {
             // Add row and cell to table
             let tr = document.createElement("tr");
+            tr.style.width = "33%";
             table.appendChild(tr);
 
             for (let col = 0; col < 3; col++) {
@@ -112,9 +113,7 @@ export class GameBoardTicTacToe extends GameBoard<GameTicTacToe> {
                     text = this.board[i] == Player.Player1 ? "X" : "O";
                 }
                 let td = document.createElement("td");
-                td.textContent = text;
-                td.style.padding = "0";
-
+                td.style.width = "33%";
                 let button = this.getGame().createActionButton(row + col, text);
                 tr.appendChild(td).appendChild(button);
             }

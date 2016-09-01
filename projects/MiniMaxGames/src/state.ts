@@ -18,8 +18,10 @@ export abstract class State {
 
     /**
      * Execute a numbered action.
+     * @param action The action number.
+     * @param isFromUser True if a user sent this action.
      */
-    public abstract act(action: number): void;
+    public abstract act(action: number, isFromUser: boolean): void;
 
     /**
      * Create this GameState within the provided container.
@@ -37,7 +39,7 @@ export abstract class State {
         button.style.width = "100%";
         button.style.height = "100%";
         button.textContent = text;
-        button.onclick = e => this.act(action);
+        button.onclick = e => this.act(action, true);
         return button;
     }
 }

@@ -20,7 +20,7 @@ define("src/state", ["require", "exports"], function (require, exports) {
             button.style.width = "100%";
             button.style.height = "100%";
             button.textContent = text;
-            button.onclick = function (e) { return _this.act(action); };
+            button.onclick = function (e) { return _this.act(action, true); };
             return button;
         };
         return State;
@@ -50,8 +50,20 @@ define("src/game", ["require", "exports", "src/state"], function (require, expor
         Game.prototype.getActions = function () {
             return this.getBoard().getAvailableMoves();
         };
-        Game.prototype.act = function (action) {
-            this.getBoard().move(action);
+        Game.prototype.act = function (action, isFromPlayer) {
+            if (isFromPlayer == this.isPlayerHuman(this.board.getTurn())) {
+                this.board = this.board.move(action);
+                this.getGameManager().render();
+            }
+            else if (isFromPlayer) {
+                alert("Please wait for the computer to move.");
+            }
+            else {
+                alert("The computer tried to move for you!?");
+            }
+        };
+        Game.prototype.isPlayerHuman = function (player) {
+            return player == Player.Player1;
         };
         return Game;
     }(state_1.State));
@@ -162,6 +174,7 @@ define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (re
             table.style.height = "100%";
             for (var row = 0; row < 9; row += 3) {
                 var tr = document.createElement("tr");
+                tr.style.width = "33%";
                 table.appendChild(tr);
                 for (var col = 0; col < 3; col++) {
                     var i = row + col;
@@ -170,8 +183,7 @@ define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (re
                         text = this.board[i] == game_1.Player.Player1 ? "X" : "O";
                     }
                     var td = document.createElement("td");
-                    td.textContent = text;
-                    td.style.padding = "0";
+                    td.style.width = "33%";
                     var button = this.getGame().createActionButton(row + col, text);
                     tr.appendChild(td).appendChild(button);
                 }

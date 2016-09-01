@@ -24,12 +24,12 @@ export abstract class Game extends State {
      * Create a new board with the specified player
      * having the first move.
      */
-    protected abstract createBoard(firstMove: Player): GameBoard<Game>;
+    protected abstract createBoard(firstMove: Player): GameBoard;
 
     /**
      * Get the current game board.
      */
-    protected getBoard(): GameBoard<Game> {
+    protected getBoard(): GameBoard {
         return this.board;
     }
 
@@ -41,8 +41,15 @@ export abstract class Game extends State {
         return this.getBoard().getAvailableMoves();
     }
 
-    public act(action: number) {
-        this.getBoard().move(action);
+    public act(action: number, isFromPlayer: boolean) {
+        if (isFromPlayer == this.isPlayerHuman(this.board.getTurn())) {
+            this.board = this.board.move(action);
+            this.getGameManager().render();
+        } else if (isFromPlayer) {
+            alert("Please wait for the computer to move.");
+        } else {
+            alert("The computer tried to move for you!?");
+        }
     }
 
     /**
@@ -54,30 +61,34 @@ export abstract class Game extends State {
      * Get a description of this game.
      */
     abstract getDesc(): string;
+
+    public isPlayerHuman(player: Player) {
+        return player == Player.Player1;
+    }
 }
 
 /**
  * A board that a game can be played on.
  */
-export abstract class GameBoard<TGame extends Game> {
+export abstract class GameBoard {
 
     /**
      * Create a new instance of the GameBoard.
      * @param turn The first player to move.
      */
-    constructor(private game: TGame, private turn: Player) { }
+    constructor(private game: Game, private turn: Player) { }
 
     /**
      * Get the game this GameBoard is for
      */
-    getGame(): TGame {
+    protected getGame(): Game {
         return this.game;
     }
 
     /**
      * Get whose turn it is, or null if the game has ended.
      */
-    getTurn(): Player {
+    public getTurn(): Player {
         return this.turn;
     }
 
@@ -92,7 +103,7 @@ export abstract class GameBoard<TGame extends Game> {
     /**
      * Check if the game has ended.
      */
-    isGameOver(): boolean {
+    public isGameOver(): boolean {
         return this.turn === null;
     }
 
@@ -112,7 +123,7 @@ export abstract class GameBoard<TGame extends Game> {
      * Move as the current player on a copy of the current game board.
      * @param move The move the current player wants to make.
      */
-    abstract move(move: number): GameBoard<TGame>;
+    abstract move(move: number): GameBoard;
 
     /**
      * Get the score for a player.
