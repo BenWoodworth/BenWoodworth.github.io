@@ -48,52 +48,49 @@ define("src/board-evaluator", ["require", "exports", "src/game"], function (requ
                         forPlayer = game_1.Player.Player1;
                 }
                 var result = BoardEvaluator.minimax(board, forPlayer, depth, -Infinity, Infinity, callback);
-                moves = result.moves;
+                moves = [];
+                result.moves.forEach(function (v, i) { return moves.push(i); });
                 alert("Score: " + result.score + ", Moves: " + moves);
             }
             var i = Math.floor(Math.random() * moves.length);
-            !callback || callback(1);
+            callback && callback(1);
             return moves[i];
         };
         BoardEvaluator.minimax = function (board, forPlayer, depth, alpha, beta, callback) {
             var moves = board.getAvailableMoves();
             if (depth == 0 || board.isGameOver()) {
                 return {
-                    moves: moves,
+                    moves: [],
                     score: board.getBoardValue(forPlayer)
                 };
             }
             var turn = board.getTurn();
             var bestMoves = null;
             for (var i = 0; i < moves.length; i++) {
-                !callback || callback(i / moves.length);
+                callback && callback(i / moves.length);
                 var move = moves[i];
                 var newBoard = board.move(move);
                 var calcMoves = this.minimax(newBoard, forPlayer, depth - 1, null, null, null);
-                if (calcMoves === null) {
-                    continue;
-                }
-                else if (bestMoves === null) {
+                if (bestMoves == null) {
                     bestMoves = calcMoves;
-                    bestMoves.moves = [move];
+                    bestMoves.moves = [];
+                    bestMoves.moves[move] = true;
                 }
                 else if (bestMoves.score == calcMoves.score) {
-                    calcMoves.moves.forEach(function (m) {
-                        if (bestMoves.moves.indexOf(m) != -1)
-                            return;
-                        bestMoves.moves.push(m);
-                    });
+                    bestMoves.moves[move] = true;
                 }
                 else if (turn == forPlayer) {
                     if (calcMoves.score > bestMoves.score) {
                         bestMoves = calcMoves;
-                        bestMoves.moves = [move];
+                        bestMoves.moves = [];
+                        bestMoves.moves[move] = true;
                     }
                 }
                 else {
                     if (calcMoves.score < bestMoves.score) {
                         bestMoves = calcMoves;
-                        bestMoves.moves = [move];
+                        bestMoves.moves = [];
+                        bestMoves.moves[move] = true;
                     }
                 }
             }
