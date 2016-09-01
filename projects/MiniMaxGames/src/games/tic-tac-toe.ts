@@ -63,11 +63,9 @@ export class GameBoardTicTacToe extends GameBoard {
         });
         
         // Winning later is better (rubbing it in)
+        // Losing later is better (more chances to not lose)
         if (gameOver && !this.isTie()) {
-            score += 1000;
-            if (winner != forPlayer) {
-                score *= -1;
-            }
+            score += winner == forPlayer ? 20 : -20
         }
 
         return score;

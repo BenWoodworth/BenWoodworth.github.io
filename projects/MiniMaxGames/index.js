@@ -47,7 +47,9 @@ define("src/board-evaluator", ["require", "exports", "src/game"], function (requ
                     else
                         forPlayer = game_1.Player.Player1;
                 }
-                moves = BoardEvaluator.minimax(board, forPlayer, depth, -Infinity, Infinity, callback).moves;
+                var result = BoardEvaluator.minimax(board, forPlayer, depth, -Infinity, Infinity, callback);
+                moves = result.moves;
+                alert("Score: " + result.score + ", Moves: " + moves);
             }
             var i = Math.floor(Math.random() * moves.length);
             !callback || callback(1);
@@ -244,10 +246,7 @@ define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (re
                     score++;
             });
             if (gameOver && !this.isTie()) {
-                score += 1000;
-                if (winner != forPlayer) {
-                    score *= -1;
-                }
+                score += winner == forPlayer ? 20 : -20;
             }
             return score;
         };

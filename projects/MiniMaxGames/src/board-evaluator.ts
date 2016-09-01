@@ -21,7 +21,9 @@ export class BoardEvaluator {
             }
 
             // Select best moves using minimax
-            moves = BoardEvaluator.minimax(board, forPlayer, depth, -Infinity, Infinity, callback).moves;
+            let result = BoardEvaluator.minimax(board, forPlayer, depth, -Infinity, Infinity, callback);
+            moves = result.moves;
+            alert(`Score: ${result.score}, Moves: ${moves}`);
         }
         
         // Randomly select from the best moves
