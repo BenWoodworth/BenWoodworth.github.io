@@ -27,7 +27,84 @@ define("src/state", ["require", "exports"], function (require, exports) {
     }());
     exports.State = State;
 });
-define("src/game", ["require", "exports", "src/state"], function (require, exports, state_1) {
+define("src/board-evaluator", ["require", "exports", "src/game"], function (require, exports, game_1) {
+    "use strict";
+    var BoardEvaluator = (function () {
+        function BoardEvaluator() {
+        }
+        BoardEvaluator.getBestMove = function (board, depth, callback) {
+            var moves;
+            if (depth == 0) {
+                moves = board.getAvailableMoves();
+            }
+            else {
+                var forPlayer = board.getTurn();
+                if (depth < 0) {
+                    depth *= -1;
+                    if (forPlayer == game_1.Player.Player1) {
+                        forPlayer = game_1.Player.Player2;
+                    }
+                    else {
+                        forPlayer = game_1.Player.Player1;
+                    }
+                }
+                moves = BoardEvaluator.minimax(board, forPlayer, depth, -Infinity, Infinity, callback).moves;
+            }
+            var i = Math.floor(Math.random() * moves.length);
+            return moves[i];
+        };
+        BoardEvaluator.minimax = function (board, forPlayer, depth, alpha, beta, callback) {
+            callback = function (p) { return !null || callback(p); };
+            if (depth == 0 || board.isGameOver()) {
+                callback(1);
+                return {
+                    moves: null,
+                    score: board.getBoardValue(forPlayer)
+                };
+            }
+            var turn = board.getTurn();
+            var moves = board.getAvailableMoves();
+            var bestMoves = null;
+            for (var i = 0; i < moves.length; i++) {
+                callback(i / moves.length);
+                var move = moves[i];
+                var newBoard = board.move(move);
+                var calcMoves = this.minimax(newBoard, forPlayer, depth - 1, null, null, null);
+                if (calcMoves === null) {
+                    continue;
+                }
+                else if (bestMoves === null) {
+                    bestMoves = calcMoves;
+                    bestMoves.moves = [move];
+                }
+                else if (bestMoves.score == calcMoves.score) {
+                    calcMoves.moves.forEach(function (m) {
+                        if (bestMoves.moves.indexOf(m) != -1)
+                            return;
+                        bestMoves.moves.push(m);
+                    });
+                }
+                else if (turn == forPlayer) {
+                    if (calcMoves.score > bestMoves.score) {
+                        bestMoves = calcMoves;
+                        bestMoves.moves = [move];
+                    }
+                }
+                else {
+                    if (calcMoves.score < bestMoves.score) {
+                        bestMoves = calcMoves;
+                        bestMoves.moves = [move];
+                    }
+                }
+            }
+            callback(1);
+            return bestMoves;
+        };
+        return BoardEvaluator;
+    }());
+    exports.BoardEvaluator = BoardEvaluator;
+});
+define("src/game", ["require", "exports", "src/state", "src/board-evaluator"], function (require, exports, state_1, board_evaluator_1) {
     "use strict";
     (function (Player) {
         Player[Player["Player1"] = 0] = "Player1";
@@ -39,6 +116,7 @@ define("src/game", ["require", "exports", "src/state"], function (require, expor
         function Game(gameManager) {
             _super.call(this, gameManager);
             this.board = this.createBoard(Player.Player1);
+            this.depth = 8;
             this.createBoard(Player.Player1);
         }
         Game.prototype.getBoard = function () {
@@ -54,6 +132,9 @@ define("src/game", ["require", "exports", "src/state"], function (require, expor
             if (isFromPlayer == this.isPlayerHuman(this.board.getTurn())) {
                 this.board = this.board.move(action);
                 this.getGameManager().render();
+                if (!this.isPlayerHuman(this.board.getTurn())) {
+                    this.cpuMove();
+                }
             }
             else if (isFromPlayer) {
                 alert("Please wait for the computer to move.");
@@ -61,6 +142,13 @@ define("src/game", ["require", "exports", "src/state"], function (require, expor
             else {
                 alert("The computer tried to move for you!?");
             }
+        };
+        Game.prototype.cpuMove = function () {
+            var move = board_evaluator_1.BoardEvaluator.getBestMove(this.board, this.depth, this.cpuProgress);
+            this.act(move, false);
+        };
+        Game.prototype.cpuProgress = function (progress) {
+            document.title = "CPU Progress: " + Math.floor(progress * 100) + "%";
         };
         Game.prototype.isPlayerHuman = function (player) {
             return player == Player.Player1;
@@ -92,7 +180,7 @@ define("src/game", ["require", "exports", "src/state"], function (require, expor
     }());
     exports.GameBoard = GameBoard;
 });
-define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (require, exports, game_1) {
+define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (require, exports, game_2) {
     "use strict";
     var GameTicTacToe = (function (_super) {
         __extends(GameTicTacToe, _super);
@@ -109,7 +197,7 @@ define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (re
             return "The classic game of X's and O's";
         };
         return GameTicTacToe;
-    }(game_1.Game));
+    }(game_2.Game));
     exports.GameTicTacToe = GameTicTacToe;
     var GameBoardTicTacToe = (function (_super) {
         __extends(GameBoardTicTacToe, _super);
@@ -128,9 +216,9 @@ define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (re
         GameBoardTicTacToe.prototype.move = function (move) {
             if (this.board[move] != null || this.isGameOver())
                 return null;
-            var result = new GameBoardTicTacToe(this.getGame(), this.getTurn() === game_1.Player.Player1
-                ? game_1.Player.Player2
-                : game_1.Player.Player1);
+            var result = new GameBoardTicTacToe(this.getGame(), this.getTurn() === game_2.Player.Player1
+                ? game_2.Player.Player2
+                : game_2.Player.Player1);
             result.board = this.board.slice(0);
             result.board[move] = this.getTurn();
             return result;
@@ -180,7 +268,7 @@ define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (re
                     var i = row + col;
                     var text = "";
                     if (this.board[i] != null) {
-                        text = this.board[i] == game_1.Player.Player1 ? "X" : "O";
+                        text = this.board[i] == game_2.Player.Player1 ? "X" : "O";
                     }
                     var td = document.createElement("td");
                     td.style.width = "33%";
@@ -190,7 +278,7 @@ define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (re
             }
         };
         return GameBoardTicTacToe;
-    }(game_1.GameBoard));
+    }(game_2.GameBoard));
     exports.GameBoardTicTacToe = GameBoardTicTacToe;
 });
 define("src/game-manager", ["require", "exports", "src/state", "src/games/tic-tac-toe"], function (require, exports, state_2, TicTacToe) {

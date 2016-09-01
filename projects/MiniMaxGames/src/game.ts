@@ -1,5 +1,6 @@
 ﻿import {State} from "./state";
 import {GameManager} from "./game-manager";
+import {BoardEvaluator} from "./board-evaluator"
 
 /**
  * A player that will play a game.
@@ -14,6 +15,7 @@ export enum Player {
  */
 export abstract class Game extends State {
     private board = this.createBoard(Player.Player1);
+    private depth = 8;
 
     constructor(gameManager: GameManager) {
         super(gameManager);
@@ -45,11 +47,29 @@ export abstract class Game extends State {
         if (isFromPlayer == this.isPlayerHuman(this.board.getTurn())) {
             this.board = this.board.move(action);
             this.getGameManager().render();
+
+            if (!this.isPlayerHuman(this.board.getTurn())) {
+                this.cpuMove(); // Tell the CPU to move on if it's its turn
+            }
         } else if (isFromPlayer) {
             alert("Please wait for the computer to move.");
         } else {
             alert("The computer tried to move for you!?");
         }
+    }
+
+    /**
+     * Let the CPU calculate the next move.
+     */
+    private cpuMove() {
+        //setTimeout(() => {
+            let move = BoardEvaluator.getBestMove(this.board, this.depth, this.cpuProgress);
+            this.act(move, false);
+        //}, 0);
+    }
+
+    private cpuProgress(progress: number) {
+        document.title = `CPU Progress: ${Math.floor(progress * 100)}%`;
     }
 
     /**
