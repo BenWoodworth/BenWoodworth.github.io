@@ -25,7 +25,7 @@ export class BoardEvaluator {
             
             moves = [];
             result.moves.forEach((v, i) => moves.push(i));
-            alert(`Score: ${result.score}, Moves: ${moves}`);
+            //alert(`CPU move options: [${moves}], Score: ${result.score}`);
         }
         
         // Randomly select from the best moves
