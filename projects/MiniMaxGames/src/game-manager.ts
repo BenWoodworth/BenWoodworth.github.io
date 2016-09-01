@@ -85,8 +85,9 @@ class MenuState extends State {
 
             // Add button to table cell
             let game = this.games[actions[i]];
-            let text = `${game.getName()} - ${game.getDesc()}`;
-            let button = this.createActionButton(actions[i], text);
+            let button = this.createActionButton(actions[i]);
+            button.textContent = `${game.getName()} - ${game.getDesc()}`;
+            button.style.width = button.style.height = "100%";
             td.appendChild(button);
         }
     }

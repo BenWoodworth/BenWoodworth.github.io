@@ -15,7 +15,7 @@ export enum Player {
  */
 export abstract class Game extends State {
     private board = this.createBoard(Player.Player1);
-    private depth = 8;
+    private depth = 10;
 
     constructor(gameManager: GameManager) {
         super(gameManager);
@@ -44,17 +44,32 @@ export abstract class Game extends State {
     }
 
     public act(action: number, isFromPlayer: boolean) {
-        if (isFromPlayer == this.isPlayerHuman(this.board.getTurn())) {
-            this.board = this.board.move(action);
-            this.getGameManager().render();
-
-            if (!this.isPlayerHuman(this.board.getTurn())) {
-                this.cpuMove(); // Tell the CPU to move on if it's its turn
+        if (this.getBoard().isGameOver()) {
+            alert("You can't move after the game has ended.");
+            return;
+        }
+        
+        if (isFromPlayer != this.isPlayerHuman(this.board.getTurn())) {
+            if (isFromPlayer) {
+                alert("Please wait for the computer to move.");
+            } else {
+                alert("The computer tried to move for you!?");
             }
-        } else if (isFromPlayer) {
-            alert("Please wait for the computer to move.");
-        } else {
-            alert("The computer tried to move for you!?");
+            return;
+        }
+
+        this.board = this.board.move(action);
+        this.getGameManager().render();
+
+        if (this.board.isGameOver()) {
+            let winner = this.board.getWinner();
+            let msg = "The game has ended in a tie!";
+            if (winner != null) {
+                msg = `Player ${winner == Player.Player1 ? 1 : 2} is the winner!`;
+            }
+            setTimeout(() => alert(msg), 1);
+        } else if (!this.isPlayerHuman(this.board.getTurn())) {
+            this.cpuMove(); // Tell the CPU to move on its turn
         }
     }
 
@@ -62,10 +77,9 @@ export abstract class Game extends State {
      * Let the CPU calculate the next move.
      */
     private cpuMove() {
-        //setTimeout(() => {
-            let move = BoardEvaluator.getBestMove(this.board, this.depth, this.cpuProgress);
-            this.act(move, false);
-        //}, 0);
+        setTimeout(() => {
+            this.act(BoardEvaluator.getBestMove(this.board, this.depth, this.cpuProgress), false);
+        }, 1);
     }
 
     private cpuProgress(progress: number) {
@@ -96,7 +110,7 @@ export abstract class GameBoard {
      * Create a new instance of the GameBoard.
      * @param turn The first player to move.
      */
-    constructor(private game: Game, private turn: Player) { }
+    constructor(private game: Game, private turn: Player) {}
 
     /**
      * Get the game this GameBoard is for
@@ -121,17 +135,20 @@ export abstract class GameBoard {
     }
 
     /**
-     * Check if the game has ended.
+     * Get the winning player, or null.
      */
-    public isGameOver(): boolean {
-        return this.turn === null;
-    }
+    public abstract getWinner(): Player;
 
     /**
-     * End the game.
+     * See if the game has ended..
      */
-    private endGame(): void {
-        this.turn = null;
+    public abstract isGameOver(): boolean;
+
+    /**
+     * See if the game has ended without a winner.
+     */
+    public isTie(): boolean {
+        return this.isGameOver() && this.getWinner() == null;
     }
 
     /**

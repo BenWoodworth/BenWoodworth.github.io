@@ -32,14 +32,14 @@ export abstract class State {
      * Create a button that will execute an action when clicked.
      * The button fills its container's width and height.
      */
-    public createActionButton(action: number, text: string) {
+    public createActionButton(action: number) {
         var button = document.createElement("button");
-        button.disabled = this.getActions().indexOf(action) < 0;
-        button.style.padding = "0";
-        button.style.width = "100%";
-        button.style.height = "100%";
-        button.textContent = text;
-        button.onclick = e => this.act(action, true);
+        if (action == null) {
+            button.disabled = true;
+        } else {
+            button.disabled = this.getActions().indexOf(action) < 0;
+            button.onclick = e => this.act(action, true);
+        }
         return button;
     }
 }

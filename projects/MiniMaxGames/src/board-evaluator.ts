@@ -7,21 +7,17 @@ interface movesAndScore {
 
 export class BoardEvaluator {
 
-    public static getBestMove(board: GameBoard, depth: number, callback: (progress: number) => any) {
+    public static getBestMove(board: GameBoard, depth: number, callback: (progress: number) => void) {
         let moves: number[];
-        
-        if (depth == 0) { // Select a move randomly
+        if (depth == 0) { // Select all available moves
             moves = board.getAvailableMoves();
         } else {
             // Try to win if depth > 0, try to lose otherwise
             let forPlayer = board.getTurn();
             if (depth < 0) {
                 depth *= -1;
-                if (forPlayer == Player.Player1) {
-                    forPlayer = Player.Player2;
-                } else {
-                    forPlayer = Player.Player1;
-                }
+                if (forPlayer == Player.Player1) forPlayer = Player.Player2
+                else forPlayer = Player.Player1;
             }
 
             // Select best moves using minimax
@@ -30,30 +26,29 @@ export class BoardEvaluator {
         
         // Randomly select from the best moves
         let i = Math.floor(Math.random() * moves.length);
+        !callback || callback(1);
         return moves[i];
     }
 
     private static minimax(board: GameBoard, forPlayer: Player, depth: number,
-            alpha: number, beta: number, callback: (progress: number) => any): movesAndScore {
+            alpha: number, beta: number, callback: (progress: number) => void): movesAndScore {
 
-        // Simplifies future callback calls
-        callback = p => !null || callback(p);
+        // Get available moves
+        let moves = board.getAvailableMoves();
 
-        // If the evaluation reached an end state
+        // If the evaluation reached an end state, return current board score
         if (depth == 0 || board.isGameOver()) {
-            callback(1);
             return {
-                moves: null,
+                moves: moves,
                 score: board.getBoardValue(forPlayer)
             };
         }
 
         // ...otherwise, continue evaluating
         let turn = board.getTurn();
-        let moves = board.getAvailableMoves();
         let bestMoves: movesAndScore = null;
         for (let i = 0; i < moves.length; i++) {
-            callback(i / moves.length);
+            !callback || callback(i / moves.length);
 
             // Calculate move score
             let move = moves[i];
@@ -85,7 +80,6 @@ export class BoardEvaluator {
         }
         
         // Callback, and return
-        callback(1);
         return bestMoves;
     }
 }

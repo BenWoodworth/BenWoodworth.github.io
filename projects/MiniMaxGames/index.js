@@ -12,15 +12,16 @@ define("src/state", ["require", "exports"], function (require, exports) {
         State.prototype.getGameManager = function () {
             return this.gameManager;
         };
-        State.prototype.createActionButton = function (action, text) {
+        State.prototype.createActionButton = function (action) {
             var _this = this;
             var button = document.createElement("button");
-            button.disabled = this.getActions().indexOf(action) < 0;
-            button.style.padding = "0";
-            button.style.width = "100%";
-            button.style.height = "100%";
-            button.textContent = text;
-            button.onclick = function (e) { return _this.act(action, true); };
+            if (action == null) {
+                button.disabled = true;
+            }
+            else {
+                button.disabled = this.getActions().indexOf(action) < 0;
+                button.onclick = function (e) { return _this.act(action, true); };
+            }
             return button;
         };
         return State;
@@ -41,32 +42,29 @@ define("src/board-evaluator", ["require", "exports", "src/game"], function (requ
                 var forPlayer = board.getTurn();
                 if (depth < 0) {
                     depth *= -1;
-                    if (forPlayer == game_1.Player.Player1) {
+                    if (forPlayer == game_1.Player.Player1)
                         forPlayer = game_1.Player.Player2;
-                    }
-                    else {
+                    else
                         forPlayer = game_1.Player.Player1;
-                    }
                 }
                 moves = BoardEvaluator.minimax(board, forPlayer, depth, -Infinity, Infinity, callback).moves;
             }
             var i = Math.floor(Math.random() * moves.length);
+            !callback || callback(1);
             return moves[i];
         };
         BoardEvaluator.minimax = function (board, forPlayer, depth, alpha, beta, callback) {
-            callback = function (p) { return !null || callback(p); };
+            var moves = board.getAvailableMoves();
             if (depth == 0 || board.isGameOver()) {
-                callback(1);
                 return {
-                    moves: null,
+                    moves: moves,
                     score: board.getBoardValue(forPlayer)
                 };
             }
             var turn = board.getTurn();
-            var moves = board.getAvailableMoves();
             var bestMoves = null;
             for (var i = 0; i < moves.length; i++) {
-                callback(i / moves.length);
+                !callback || callback(i / moves.length);
                 var move = moves[i];
                 var newBoard = board.move(move);
                 var calcMoves = this.minimax(newBoard, forPlayer, depth - 1, null, null, null);
@@ -97,7 +95,6 @@ define("src/board-evaluator", ["require", "exports", "src/game"], function (requ
                     }
                 }
             }
-            callback(1);
             return bestMoves;
         };
         return BoardEvaluator;
@@ -116,7 +113,7 @@ define("src/game", ["require", "exports", "src/state", "src/board-evaluator"], f
         function Game(gameManager) {
             _super.call(this, gameManager);
             this.board = this.createBoard(Player.Player1);
-            this.depth = 8;
+            this.depth = 10;
             this.createBoard(Player.Player1);
         }
         Game.prototype.getBoard = function () {
@@ -129,23 +126,38 @@ define("src/game", ["require", "exports", "src/state", "src/board-evaluator"], f
             return this.getBoard().getAvailableMoves();
         };
         Game.prototype.act = function (action, isFromPlayer) {
-            if (isFromPlayer == this.isPlayerHuman(this.board.getTurn())) {
-                this.board = this.board.move(action);
-                this.getGameManager().render();
-                if (!this.isPlayerHuman(this.board.getTurn())) {
-                    this.cpuMove();
+            if (this.getBoard().isGameOver()) {
+                alert("You can't move after the game has ended.");
+                return;
+            }
+            if (isFromPlayer != this.isPlayerHuman(this.board.getTurn())) {
+                if (isFromPlayer) {
+                    alert("Please wait for the computer to move.");
                 }
+                else {
+                    alert("The computer tried to move for you!?");
+                }
+                return;
             }
-            else if (isFromPlayer) {
-                alert("Please wait for the computer to move.");
+            this.board = this.board.move(action);
+            this.getGameManager().render();
+            if (this.board.isGameOver()) {
+                var winner = this.board.getWinner();
+                var msg_1 = "The game has ended in a tie!";
+                if (winner != null) {
+                    msg_1 = "Player " + (winner == Player.Player1 ? 1 : 2) + " is the winner!";
+                }
+                setTimeout(function () { return alert(msg_1); }, 1);
             }
-            else {
-                alert("The computer tried to move for you!?");
+            else if (!this.isPlayerHuman(this.board.getTurn())) {
+                this.cpuMove();
             }
         };
         Game.prototype.cpuMove = function () {
-            var move = board_evaluator_1.BoardEvaluator.getBestMove(this.board, this.depth, this.cpuProgress);
-            this.act(move, false);
+            var _this = this;
+            setTimeout(function () {
+                _this.act(board_evaluator_1.BoardEvaluator.getBestMove(_this.board, _this.depth, _this.cpuProgress), false);
+            }, 1);
         };
         Game.prototype.cpuProgress = function (progress) {
             document.title = "CPU Progress: " + Math.floor(progress * 100) + "%";
@@ -170,11 +182,8 @@ define("src/game", ["require", "exports", "src/state", "src/board-evaluator"], f
         GameBoard.prototype.setTurn = function (player) {
             this.turn = player;
         };
-        GameBoard.prototype.isGameOver = function () {
-            return this.turn === null;
-        };
-        GameBoard.prototype.endGame = function () {
-            this.turn = null;
+        GameBoard.prototype.isTie = function () {
+            return this.isGameOver() && this.getWinner() == null;
         };
         return GameBoard;
     }());
@@ -227,54 +236,80 @@ define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (re
             return this.getWinner() === forPlayer ? 1 : 0;
         };
         GameBoardTicTacToe.prototype.getBoardValue = function (forPlayer) {
+            var gameOver = this.isGameOver();
             var winner = this.getWinner();
-            if (winner === null) {
-                var score_1 = 0;
-                this.board.forEach(function (value) {
-                    if (value !== null)
-                        score_1++;
-                });
+            var score = 0;
+            this.board.forEach(function (value) {
+                if (value != null)
+                    score++;
+            });
+            if (gameOver && !this.isTie()) {
+                score += 1000;
+                if (winner != forPlayer) {
+                    score *= -1;
+                }
             }
-            return winner === forPlayer
-                ? Number.POSITIVE_INFINITY
-                : Number.NEGATIVE_INFINITY;
+            return score;
+        };
+        GameBoardTicTacToe.prototype.isGameOver = function () {
+            if (this.getWinner() != null)
+                return true;
+            for (var i = 0; i < 9; i++) {
+                if (this.board[i] == null)
+                    return false;
+            }
+            return true;
         };
         GameBoardTicTacToe.prototype.getWinner = function () {
             var b = this.board;
             for (var i = 0; i < 3; i++) {
-                if ((b[i] === b[i + 1] && b[i] === b[i + 2]) ||
-                    (b[i] === b[i + 3] && b[i] === b[i + 6])) {
-                    if (b[i] !== null)
-                        return b[i];
+                var r = i * 3;
+                if ((b[r] == b[r + 1] && b[r] == b[r + 2]) ||
+                    (b[i] == b[i + 3] && b[i] == b[i + 6])) {
+                    var sp = 4 * i;
+                    if (b[sp] != null)
+                        return b[sp];
                 }
             }
-            if ((b[0] === b[4] && b[0] === b[8]) ||
-                (b[2] === b[4] && b[2] === b[6])) {
-                if (b[4] !== null)
+            if ((b[0] == b[4] && b[0] == b[8]) ||
+                (b[2] == b[4] && b[2] == b[6])) {
+                if (b[4] != null)
                     return b[4];
             }
             return null;
         };
         GameBoardTicTacToe.prototype.createBoard = function (container) {
-            var table = document.createElement("table");
-            container.appendChild(table);
-            table.style.width = "100%";
-            table.style.height = "100%";
-            for (var row = 0; row < 9; row += 3) {
-                var tr = document.createElement("tr");
-                tr.style.width = "33%";
-                table.appendChild(tr);
-                for (var col = 0; col < 3; col++) {
-                    var i = row + col;
-                    var text = "";
-                    if (this.board[i] != null) {
-                        text = this.board[i] == game_2.Player.Player1 ? "X" : "O";
-                    }
-                    var td = document.createElement("td");
-                    td.style.width = "33%";
-                    var button = this.getGame().createActionButton(row + col, text);
-                    tr.appendChild(td).appendChild(button);
+            var board = document.createElement("div");
+            board.style.position = "relative";
+            board.style.width = "100%";
+            board.style.height = "100%";
+            container.appendChild(board);
+            var bDivs = [];
+            for (var i = 0; i < 9; i++) {
+                bDivs[i] = document.createElement("div");
+                bDivs[i].style.position = "absolute";
+                var button = this.getGame().createActionButton(i);
+                button.style.width = button.style.height = "100%";
+                button.style.fontSize = "1in";
+                if (this.board[i] != null) {
+                    button.textContent = this.board[i] == game_2.Player.Player1 ? "X" : "O";
                 }
+                board.appendChild(bDivs[i]).appendChild(button);
+            }
+            var third = "33%";
+            for (var i = 0; i < 3; i++) {
+                bDivs[i].style.top = "0";
+                bDivs[i].style.height = third;
+                bDivs[i * 3].style.left = "0";
+                bDivs[i * 3].style.width = third;
+                bDivs[i + 3].style.top = third;
+                bDivs[i + 3].style.bottom = third;
+                bDivs[i * 3 + 1].style.left = third;
+                bDivs[i * 3 + 1].style.right = third;
+                bDivs[i + 6].style.bottom = "0";
+                bDivs[i + 6].style.height = third;
+                bDivs[i * 3 + 2].style.right = "0";
+                bDivs[i * 3 + 2].style.width = third;
             }
         };
         return GameBoardTicTacToe;
@@ -342,8 +377,9 @@ define("src/game-manager", ["require", "exports", "src/state", "src/games/tic-ta
                 tr.style.height = "30pt";
                 table.appendChild(tr).appendChild(td);
                 var game = this.games[actions[i]];
-                var text = game.getName() + " - " + game.getDesc();
-                var button = this.createActionButton(actions[i], text);
+                var button = this.createActionButton(actions[i]);
+                button.textContent = game.getName() + " - " + game.getDesc();
+                button.style.width = button.style.height = "100%";
                 td.appendChild(button);
             }
         };
