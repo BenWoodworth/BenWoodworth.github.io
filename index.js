@@ -22,6 +22,8 @@ $(document).ready(function() {
     $("#navigation").on("click", "a[data-nav]", function() {
         navigate($(this).attr("data-nav"));
     })
+
+    navigate("./_home.html");
 });
 
 function navigate(url) {
@@ -30,5 +32,3 @@ function navigate(url) {
 
     $("#content-frame")[0].src = url;
 }
-
-navigate("./index.html");
