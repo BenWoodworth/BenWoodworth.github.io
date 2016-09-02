@@ -50,7 +50,6 @@ define("src/board-evaluator", ["require", "exports", "src/game"], function (requ
                 var result = BoardEvaluator.minimax(board, forPlayer, depth, -Infinity, Infinity, callback);
                 moves = [];
                 result.moves.forEach(function (v, i) { return moves.push(i); });
-                alert("CPU move options: [" + moves + "], Score: " + result.score);
             }
             var i = Math.floor(Math.random() * moves.length);
             callback && callback(1);
