@@ -13,7 +13,7 @@ $(document).ready(function() {
         var div = document.createElement("div");
         var img = document.createElement("img");
         div.className = "nav-img-div";
-        img.src = "./_img/" + src + ".svg";
+        img.src = "./img/" + src + ".svg";
         div.appendChild(img);
         e.prepend(div);
     });
@@ -23,7 +23,7 @@ $(document).ready(function() {
         navigate($(this).attr("data-nav"));
     })
 
-    navigate("./_home.html");
+    navigate("./page_home.html");
 });
 
 function navigate(url) {
