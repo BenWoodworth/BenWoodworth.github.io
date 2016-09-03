@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ page.title }} - Ben Woodworth</title>
+        <link rel="stylesheet" href="/css/site.css">
+    </head>
+
+    <body>
+        <header>
+            Ben Woodworth
+        </header>
+        <div id="page">
+            <nav>
+                {% for page in site.navigation %}
+                    <a href="{{page.url}}" style="background-color: {{page.color}}; border-color: {{page.color}};">
+                        <img src="/img/nav/{{page.image}}" alt="{{page.title}}">
+                        {{page.title}}
+                    </a>
+                {% endfor %}
+            </nav>
+            <div id="content">
+                {{ content }}
+            </div>
+        </div>
+        <footer>
+
+        </footer>
+    </body>
+</html>
