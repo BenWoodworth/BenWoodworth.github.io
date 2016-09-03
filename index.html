@@ -1,34 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+    <head>
 
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="./index.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script src="./index.js"></script>
-    <title>Ben Woodworth - Home</title>
-</head>
+    </head>
 
-<body>
-    <div id="header">
-        Ben Woodworth
-    </div>
-    <div id="body">
-        <div id="navigation">
-            <a data-color="#36C9FF" data-img="nav-home"      data-nav="./page_home.html">Home</a>
-            <a data-color="#BF8040" data-img="nav-projects"  data-nav="./page_projects.html">Projects</a>
-            <a data-color="#FE8427" data-img="nav-education" data-nav="./page_education.html">Education</a>
-            <a data-color="#9ACD32" data-img="nav-contact"   data-nav="./page_contact.html">Contact</a>
-            <a data-color="#800080" data-img="nav-github"    href="http://www.github.com/benwoodworth">GitHub</a>
-            <a data-color="#0077B5" data-img="nav-linkedin"  href="http://www.linkedin.com/in/benjaminwoodworth">LinkedIn</a>
+    <body>
+        <header>
+            Ben Woodworth
+        </header>
+        <div id="main">
+            <nav>
+                {% for page in site.navigation %}
+                    <a href="{{page.url}}" style="background-color: {{page.color}}; border-color: {{page.color}};">
+                        <img src="/img/nav/{{page.image}}" alt="{{page.title}}">
+                        {{page.title}}
+                    </a>
+                {% endfor %}
+            </nav>
+            <div id="content">
+
+            </div>
         </div>
-        <div id="content">
-            <iframe id="content-frame"></iframe>
-        </div>
-    </div>
-    <div id="footer">
-        &copy;Ben Woodworth - 2016
-    </div>
-</body>
+        <footer>
 
+        </footer>
+    </body>
 </html>
