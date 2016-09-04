@@ -2,50 +2,44 @@
 
 export class GameNAME extends Game {
 
-    protected createBoard(firstMove: Player) {
+    protected createBoard(firstMove: Player): GameBoardNAME {
         return new GameBoardNAME(this, firstMove);
     }
 
     getName(): string {
-        // TODO
-        return null;
+        return null; // TODO
     }
 
     getDesc(): string {
-        // TODO
-        return null;
+        return null; // TODO
     }
 }
 
-export class GameBoardNAME extends GameBoard<GameNAME> {
-    private board: Player[] = [];
+export class GameBoardNAME extends GameBoard {
+    //private board: ?[] = [];
 
     getAvailableMoves(): number[] {
-        // TODO
-        return null;
+        const moves: number[] = [];
+        return null; // TODO
     }
 
     move(move: number): GameBoardNAME {
-        // TODO
-        return null;
-    }
-
-    getScore(forPlayer: Player): number {
-        // TODO
-        return null;
+        return null; // TODO
     }
 
     getBoardValue(forPlayer: Player): number {
-        // TODO
-        return null;
+        return null; // TODO
     }
 
-    private getWinner(): Player {
-        // TODO
-        return null;
+    public isGameOver(): boolean {
+        return null; // TODO
+    }
+
+    public getWinner(): Player {
+        return null; // TODO
     }
 
     createBoard(container: HTMLElement): void {
-        // TODO
+        return null; // TODO
     }
 }

@@ -46,11 +46,6 @@ export class GameBoardTicTacToe extends GameBoard {
         return result;
     }
 
-    getScore(forPlayer: Player): number {
-        // Return 1 if the player is the winner, 0 otherwise
-        return this.getWinner() === forPlayer ? 1 : 0;
-    }
-
     getBoardValue(forPlayer: Player): number {
         // If no winner, further in the game is better
         const gameOver = this.isGameOver();

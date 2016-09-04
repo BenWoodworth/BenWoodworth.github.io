@@ -163,12 +163,6 @@ export abstract class GameBoard {
     abstract move(move: number): GameBoard;
 
     /**
-     * Get the score for a player.
-     * @param forPlayer The player whose score to get.
-     */
-    abstract getScore(forPlayer: Player): number;
-
-    /**
      * Get a rating of the current board for a player.
      * Used for MiniMax to determine how good the player's position is.
      * @param forPlayer The player whose board position should be rated.
