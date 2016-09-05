@@ -57,14 +57,14 @@ export class GameBoardMancala extends GameBoard {
             stones--;
         }
 
+        // If landed in empty space on own side, and opposite space not empty, take pieces
         let sideStart = this.getTurn() == Player.Player1 ? 0 : 7;
-        if (curSpace >= sideStart && curSpace <= sideStart + 5) { // If landed on own side
-            if (newBoard[curSpace] == 1) { // ...and slot was empty
-                // ...Take pieces from opposite slot
-                let oppositeSpace = 12 - curSpace;
+        if (curSpace >= sideStart && curSpace <= sideStart + 5) {
+            let oppositeSpace = 12 - curSpace;
+            if (newBoard[curSpace] == 1 && newBoard[oppositeSpace] != 0) {
                 newBoard[sideStart + 6] += newBoard[oppositeSpace] + 1;
-                newBoard[curSpace] = 0;
                 newBoard[oppositeSpace] = 0;
+                newBoard[curSpace] = 0;
             }
         }
         
@@ -80,9 +80,9 @@ export class GameBoardMancala extends GameBoard {
             hasPieces2 = hasPieces2 || newBoard[i + 7] != 0;
         }
         if (!hasPieces1 || !hasPieces2) {
-            let emptySideStart = hasPieces2 ? 0 : 7;
-            let kalah = (emptySideStart + 13) % 14;
-            for (let i = emptySideStart; i < emptySideStart + 6; i++) {
+            let nonEmptySideStart = hasPieces1 ? 0 : 7;
+            let kalah = (nonEmptySideStart + 13) % 14;
+            for (let i = nonEmptySideStart; i < nonEmptySideStart + 6; i++) {
                 newBoard[kalah] += newBoard[i];
                 newBoard[i] = 0;
             }
@@ -96,18 +96,22 @@ export class GameBoardMancala extends GameBoard {
     }
 
     getBoardValue(forPlayer: Player): number {
-        let slot = forPlayer == Player.Player1 ? 0 : 7;
-        let score = this.board[slot] - this.board[7 - slot];
-
-        if (this.isGameOver()) {
+        // Calculate board score for player 1
+        let score = this.board[6] - this.board[13];
+        if (this.isGameOver() && this.getWinner() != null) {
             let winner = this.getWinner();
-            if (winner == forPlayer) {
+            if (winner == Player.Player1) {
                 score += 100;
             } else if (winner != forPlayer) {
                 score -= 100;
             }
         }
 
+        // Negate score if forPlayer is player 2
+        if (forPlayer == Player.Player2) {
+            score *= -1;
+        }
+        
         return score;
     }
 

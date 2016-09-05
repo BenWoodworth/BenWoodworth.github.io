@@ -15,7 +15,7 @@ export enum Player {
  */
 export abstract class Game extends State {
     private board = this.createBoard(Player.Player1);
-    private depth = 10;
+    private depth = 9;
 
     constructor(gameManager: GameManager) {
         super(gameManager);

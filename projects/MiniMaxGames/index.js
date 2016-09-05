@@ -111,7 +111,7 @@ define("src/game", ["require", "exports", "src/state", "src/board-evaluator"], f
         function Game(gameManager) {
             _super.call(this, gameManager);
             this.board = this.createBoard(Player.Player1);
-            this.depth = 10;
+            this.depth = 9;
             this.createBoard(Player.Player1);
         }
         Game.prototype.getBoard = function () {
@@ -364,11 +364,11 @@ define("src/games/mancala", ["require", "exports", "src/game"], function (requir
             }
             var sideStart = this.getTurn() == game_3.Player.Player1 ? 0 : 7;
             if (curSpace >= sideStart && curSpace <= sideStart + 5) {
-                if (newBoard[curSpace] == 1) {
-                    var oppositeSpace = 12 - curSpace;
+                var oppositeSpace = 12 - curSpace;
+                if (newBoard[curSpace] == 1 && newBoard[oppositeSpace] != 0) {
                     newBoard[sideStart + 6] += newBoard[oppositeSpace] + 1;
-                    newBoard[curSpace] = 0;
                     newBoard[oppositeSpace] = 0;
+                    newBoard[curSpace] = 0;
                 }
             }
             if (curSpace != sideStart + 6) {
@@ -380,9 +380,9 @@ define("src/games/mancala", ["require", "exports", "src/game"], function (requir
                 hasPieces2 = hasPieces2 || newBoard[i + 7] != 0;
             }
             if (!hasPieces1 || !hasPieces2) {
-                var emptySideStart = hasPieces2 ? 0 : 7;
-                var kalah = (emptySideStart + 13) % 14;
-                for (var i = emptySideStart; i < emptySideStart + 6; i++) {
+                var nonEmptySideStart = hasPieces1 ? 0 : 7;
+                var kalah = (nonEmptySideStart + 13) % 14;
+                for (var i = nonEmptySideStart; i < nonEmptySideStart + 6; i++) {
                     newBoard[kalah] += newBoard[i];
                     newBoard[i] = 0;
                 }
@@ -393,16 +393,18 @@ define("src/games/mancala", ["require", "exports", "src/game"], function (requir
             return result;
         };
         GameBoardMancala.prototype.getBoardValue = function (forPlayer) {
-            var slot = forPlayer == game_3.Player.Player1 ? 0 : 7;
-            var score = this.board[slot] - this.board[7 - slot];
-            if (this.isGameOver()) {
+            var score = this.board[6] - this.board[13];
+            if (this.isGameOver() && this.getWinner() != null) {
                 var winner = this.getWinner();
-                if (winner == forPlayer) {
+                if (winner == game_3.Player.Player1) {
                     score += 100;
                 }
                 else if (winner != forPlayer) {
                     score -= 100;
                 }
+            }
+            if (forPlayer == game_3.Player.Player2) {
+                score *= -1;
             }
             return score;
         };
