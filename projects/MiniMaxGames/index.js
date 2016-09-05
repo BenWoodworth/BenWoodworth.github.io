@@ -111,7 +111,7 @@ define("src/game", ["require", "exports", "src/state", "src/board-evaluator"], f
         function Game(gameManager) {
             _super.call(this, gameManager);
             this.board = this.createBoard(Player.Player1);
-            this.depth = 10;
+            this.depth = 9;
             this.createBoard(Player.Player1);
         }
         Game.prototype.getBoard = function () {
@@ -230,9 +230,6 @@ define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (re
             result.board[move] = this.getTurn();
             return result;
         };
-        GameBoardTicTacToe.prototype.getScore = function (forPlayer) {
-            return this.getWinner() === forPlayer ? 1 : 0;
-        };
         GameBoardTicTacToe.prototype.getBoardValue = function (forPlayer) {
             var gameOver = this.isGameOver();
             var winner = this.getWinner();
@@ -311,7 +308,145 @@ define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (re
     }(game_2.GameBoard));
     exports.GameBoardTicTacToe = GameBoardTicTacToe;
 });
-define("src/game-manager", ["require", "exports", "src/state", "src/games/tic-tac-toe"], function (require, exports, state_2, TicTacToe) {
+define("src/games/mancala", ["require", "exports", "src/game"], function (require, exports, game_3) {
+    "use strict";
+    var GameMancala = (function (_super) {
+        __extends(GameMancala, _super);
+        function GameMancala() {
+            _super.apply(this, arguments);
+        }
+        GameMancala.prototype.createBoard = function (firstMove) {
+            return new GameBoardMancala(this, firstMove);
+        };
+        GameMancala.prototype.getName = function () {
+            return "Mancala";
+        };
+        GameMancala.prototype.getDesc = function () {
+            return "The Kalah variant of Mancala.";
+        };
+        return GameMancala;
+    }(game_3.Game));
+    exports.GameMancala = GameMancala;
+    var GameBoardMancala = (function (_super) {
+        __extends(GameBoardMancala, _super);
+        function GameBoardMancala(game, turn) {
+            _super.call(this, game, turn);
+            this.board = [];
+            this.board[6] = this.board[13] = 0;
+            for (var i = 0; i < 6; i++) {
+                this.board[i] = this.board[i + 7] = 4;
+            }
+        }
+        GameBoardMancala.prototype.getAvailableMoves = function () {
+            var moves = [];
+            var turnOffset = this.getTurn() ? 0 : 7;
+            for (var i = turnOffset; i < turnOffset + 6; i++) {
+                if (this.board[i] != 0)
+                    moves.push(i);
+            }
+            return moves;
+        };
+        GameBoardMancala.prototype.move = function (move) {
+            var newBoard = this.board.slice();
+            var newTurn = this.getTurn();
+            var skipSpace = this.getTurn() == game_3.Player.Player1 ? 13 : 6;
+            var stones = newBoard[move];
+            newBoard[move] = 0;
+            var curSpace = move;
+            while (stones-- > 0) {
+                curSpace = (curSpace + 1) % 14;
+                if (curSpace == skipSpace)
+                    continue;
+                newBoard[curSpace]++;
+            }
+            var sideStart = this.getTurn() == game_3.Player.Player1 ? 0 : 7;
+            if (curSpace >= sideStart && curSpace < sideStart + 6) {
+                if (newBoard[curSpace] == 0) {
+                    var oppositeSlot = 12 - curSpace;
+                    newBoard[sideStart + 6] += newBoard[oppositeSlot] + 1;
+                    newBoard[curSpace] = 0;
+                    newBoard[oppositeSlot] = 0;
+                }
+            }
+            else if (curSpace != sideStart + 6) {
+                newTurn = newTurn == game_3.Player.Player1 ? game_3.Player.Player2 : game_3.Player.Player1;
+            }
+            var result = new GameBoardMancala(this.getGame(), newTurn);
+            result.board = newBoard;
+            return result;
+        };
+        GameBoardMancala.prototype.getBoardValue = function (forPlayer) {
+            var slot = forPlayer == game_3.Player.Player1 ? 0 : 7;
+            var score = this.board[slot] - this.board[7 - slot];
+            if (this.isGameOver()) {
+                var winner = this.getWinner();
+                if (winner == forPlayer) {
+                    score += 100;
+                }
+                else if (winner != forPlayer) {
+                    score -= 100;
+                }
+            }
+            return score;
+        };
+        GameBoardMancala.prototype.isGameOver = function () {
+            for (var i = 0; i < 6; i++) {
+                if (this.board[i] != 0)
+                    return false;
+                if (this.board[i + 7] != 0)
+                    return false;
+            }
+            return true;
+        };
+        GameBoardMancala.prototype.getWinner = function () {
+            var p1 = this.board[6];
+            var p2 = this.board[13];
+            if (p1 > p2) {
+                return game_3.Player.Player1;
+            }
+            else if (p1 < p2) {
+                return game_3.Player.Player2;
+            }
+            return null;
+        };
+        GameBoardMancala.prototype.createBoard = function (container) {
+            var board = document.createElement("div");
+            board.style.width = "100%";
+            board.style.height = "0";
+            board.style.paddingBottom = "25%";
+            board.style.position = "relative";
+            var bDivs = [];
+            for (var i = 0; i < 14; i++) {
+                bDivs[i] = document.createElement("div");
+                bDivs[i].style.position = "absolute";
+                bDivs[i].style.width = "12.5%";
+                bDivs[i].style.height = (i % 7 == 6) ? "100%" : "50%";
+            }
+            bDivs[13].style.left = "0";
+            bDivs[0].style.left = bDivs[12].style.left = "12.5%";
+            bDivs[1].style.left = bDivs[11].style.left = "25%";
+            bDivs[2].style.left = bDivs[10].style.left = "37.5%";
+            bDivs[3].style.right = bDivs[9].style.right = "37.5%";
+            bDivs[4].style.right = bDivs[8].style.right = "25%";
+            bDivs[5].style.right = bDivs[7].style.right = "12.5%";
+            bDivs[6].style.right = "0";
+            for (var i = 0; i < 6; i++) {
+                bDivs[i].style.top = "50%";
+                bDivs[i + 7].style.top = "0";
+            }
+            for (var i = 0; i < 14; i++) {
+                var button = this.getGame().createActionButton(i);
+                button.style.width = button.style.height = "100%";
+                button.innerText = this.board[i].toString();
+                board.appendChild(bDivs[i]).appendChild(button);
+            }
+            container.appendChild(board);
+        };
+        return GameBoardMancala;
+    }(game_3.GameBoard));
+    exports.GameBoardMancala = GameBoardMancala;
+});
+define("src/game-manager", ["require", "exports", "src/state", "src/games/tic-tac-toe", "src/games/mancala"], function (require, exports, state_2, TicTacToe, Mancala) {
     "use strict";
     var GameManager = (function () {
         function GameManager(container) {
@@ -344,7 +479,8 @@ define("src/game-manager", ["require", "exports", "src/state", "src/games/tic-ta
         function MenuState() {
             _super.apply(this, arguments);
             this.games = [
-                new TicTacToe.GameTicTacToe(this.getGameManager())
+                new TicTacToe.GameTicTacToe(this.getGameManager()),
+                new Mancala.GameMancala(this.getGameManager())
             ];
         }
         MenuState.prototype.getActions = function () {

@@ -1,6 +1,7 @@
 import {State} from "./state";
 import {Game, GameBoard, Player} from "./game";
 import * as TicTacToe from "./games/tic-tac-toe";
+import * as Mancala from "./games/mancala";
 
 export class GameManager {
     private menu: State = new MenuState(this);
@@ -48,7 +49,8 @@ export class GameManager {
 
 class MenuState extends State {
     private games = [
-        new TicTacToe.GameTicTacToe(this.getGameManager())
+        new TicTacToe.GameTicTacToe(this.getGameManager()),
+        new Mancala.GameMancala(this.getGameManager())
     ];
 
     public getActions() {
