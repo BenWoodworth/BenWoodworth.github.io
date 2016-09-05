@@ -110,6 +110,8 @@ export class GameBoardTicTacToe extends GameBoard {
         for (let i = 0; i < 9; i++) {
             bDivs[i] = document.createElement("div");
             bDivs[i].style.position = "absolute";
+            bDivs[i].style.padding = "1px";
+            bDivs[i].style.boxSizing = "border-box";
 
             let button = this.getGame().createActionButton(i);
             button.style.width = button.style.height = "100%";

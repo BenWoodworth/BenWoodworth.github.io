@@ -73,6 +73,22 @@ export class GameBoardMancala extends GameBoard {
             newTurn = this.getTurn() == Player.Player1 ? Player.Player2 : Player.Player1;
         }
 
+        // Check if there's a side with no pieces, which would end the game
+        let hasPieces1 = false, hasPieces2 = false;
+        for (let i = 0; i < 6; i++) {
+            hasPieces1 = hasPieces1 || newBoard[i] != 0;
+            hasPieces2 = hasPieces2 || newBoard[i + 7] != 0;
+        }
+        if (!hasPieces1 || !hasPieces2) {
+            let emptySideStart = hasPieces2 ? 0 : 7;
+            let kalah = (emptySideStart + 13) % 14;
+            for (let i = emptySideStart; i < emptySideStart + 6; i++) {
+                newBoard[kalah] += newBoard[i];
+                newBoard[i] = 0;
+            }
+            newTurn = null; // End game
+        }
+
         // Return a new board
         let result = new GameBoardMancala(this.getGame(), newTurn);
         result.board = newBoard;
@@ -96,11 +112,7 @@ export class GameBoardMancala extends GameBoard {
     }
 
     public isGameOver(): boolean {
-        for (let i = 0; i < 6; i++) {
-            if (this.board[i] != 0) return false;
-            if (this.board[i + 7] != 0) return false;
-        }
-        return true;
+        return this.getTurn() == null;
     }
 
     public getWinner(): Player {
@@ -129,6 +141,8 @@ export class GameBoardMancala extends GameBoard {
             bDivs[i].style.position = "absolute";
             bDivs[i].style.width = "12.5%";
             bDivs[i].style.height = (i % 7 == 6) ? "100%" : "50%";
+            bDivs[i].style.padding = "1px";
+            bDivs[i].style.boxSizing = "border-box";
         }
 
         // Horizontally align the divs

@@ -111,7 +111,7 @@ define("src/game", ["require", "exports", "src/state", "src/board-evaluator"], f
         function Game(gameManager) {
             _super.call(this, gameManager);
             this.board = this.createBoard(Player.Player1);
-            this.depth = 9;
+            this.depth = 10;
             this.createBoard(Player.Player1);
         }
         Game.prototype.getBoard = function () {
@@ -280,6 +280,8 @@ define("src/games/tic-tac-toe", ["require", "exports", "src/game"], function (re
             for (var i = 0; i < 9; i++) {
                 bDivs[i] = document.createElement("div");
                 bDivs[i].style.position = "absolute";
+                bDivs[i].style.padding = "1px";
+                bDivs[i].style.boxSizing = "border-box";
                 var button = this.getGame().createActionButton(i);
                 button.style.width = button.style.height = "100%";
                 button.style.fontSize = "1in";
@@ -372,6 +374,20 @@ define("src/games/mancala", ["require", "exports", "src/game"], function (requir
             if (curSpace != sideStart + 6) {
                 newTurn = this.getTurn() == game_3.Player.Player1 ? game_3.Player.Player2 : game_3.Player.Player1;
             }
+            var hasPieces1 = false, hasPieces2 = false;
+            for (var i = 0; i < 6; i++) {
+                hasPieces1 = hasPieces1 || newBoard[i] != 0;
+                hasPieces2 = hasPieces2 || newBoard[i + 7] != 0;
+            }
+            if (!hasPieces1 || !hasPieces2) {
+                var emptySideStart = hasPieces2 ? 0 : 7;
+                var kalah = (emptySideStart + 13) % 14;
+                for (var i = emptySideStart; i < emptySideStart + 6; i++) {
+                    newBoard[kalah] += newBoard[i];
+                    newBoard[i] = 0;
+                }
+                newTurn = null;
+            }
             var result = new GameBoardMancala(this.getGame(), newTurn);
             result.board = newBoard;
             return result;
@@ -391,13 +407,7 @@ define("src/games/mancala", ["require", "exports", "src/game"], function (requir
             return score;
         };
         GameBoardMancala.prototype.isGameOver = function () {
-            for (var i = 0; i < 6; i++) {
-                if (this.board[i] != 0)
-                    return false;
-                if (this.board[i + 7] != 0)
-                    return false;
-            }
-            return true;
+            return this.getTurn() == null;
         };
         GameBoardMancala.prototype.getWinner = function () {
             var p1 = this.board[6];
@@ -422,6 +432,8 @@ define("src/games/mancala", ["require", "exports", "src/game"], function (requir
                 bDivs[i].style.position = "absolute";
                 bDivs[i].style.width = "12.5%";
                 bDivs[i].style.height = (i % 7 == 6) ? "100%" : "50%";
+                bDivs[i].style.padding = "1px";
+                bDivs[i].style.boxSizing = "border-box";
             }
             bDivs[13].style.left = "0";
             bDivs[0].style.left = bDivs[12].style.left = "12.5%";
