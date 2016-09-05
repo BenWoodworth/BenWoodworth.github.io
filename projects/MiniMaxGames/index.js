@@ -339,7 +339,7 @@ define("src/games/mancala", ["require", "exports", "src/game"], function (requir
         }
         GameBoardMancala.prototype.getAvailableMoves = function () {
             var moves = [];
-            var turnOffset = this.getTurn() ? 0 : 7;
+            var turnOffset = this.getTurn() == game_3.Player.Player1 ? 0 : 7;
             for (var i = turnOffset; i < turnOffset + 6; i++) {
                 if (this.board[i] != 0)
                     moves.push(i);
@@ -353,23 +353,24 @@ define("src/games/mancala", ["require", "exports", "src/game"], function (requir
             var stones = newBoard[move];
             newBoard[move] = 0;
             var curSpace = move;
-            while (stones-- > 0) {
+            while (stones > 0) {
                 curSpace = (curSpace + 1) % 14;
                 if (curSpace == skipSpace)
                     continue;
                 newBoard[curSpace]++;
+                stones--;
             }
             var sideStart = this.getTurn() == game_3.Player.Player1 ? 0 : 7;
-            if (curSpace >= sideStart && curSpace < sideStart + 6) {
-                if (newBoard[curSpace] == 0) {
-                    var oppositeSlot = 12 - curSpace;
-                    newBoard[sideStart + 6] += newBoard[oppositeSlot] + 1;
+            if (curSpace >= sideStart && curSpace <= sideStart + 5) {
+                if (newBoard[curSpace] == 1) {
+                    var oppositeSpace = 12 - curSpace;
+                    newBoard[sideStart + 6] += newBoard[oppositeSpace] + 1;
                     newBoard[curSpace] = 0;
-                    newBoard[oppositeSlot] = 0;
+                    newBoard[oppositeSpace] = 0;
                 }
             }
-            else if (curSpace != sideStart + 6) {
-                newTurn = newTurn == game_3.Player.Player1 ? game_3.Player.Player2 : game_3.Player.Player1;
+            if (curSpace != sideStart + 6) {
+                newTurn = this.getTurn() == game_3.Player.Player1 ? game_3.Player.Player2 : game_3.Player.Player1;
             }
             var result = new GameBoardMancala(this.getGame(), newTurn);
             result.board = newBoard;
@@ -431,13 +432,14 @@ define("src/games/mancala", ["require", "exports", "src/game"], function (requir
             bDivs[5].style.right = bDivs[7].style.right = "12.5%";
             bDivs[6].style.right = "0";
             for (var i = 0; i < 6; i++) {
-                bDivs[i].style.top = "50%";
+                bDivs[i].style.bottom = "0";
                 bDivs[i + 7].style.top = "0";
             }
             for (var i = 0; i < 14; i++) {
                 var button = this.getGame().createActionButton(i);
                 button.style.width = button.style.height = "100%";
-                button.innerText = this.board[i].toString();
+                var amount = this.board[i];
+                button.innerText = amount == 0 ? "" : amount.toString();
                 board.appendChild(bDivs[i]).appendChild(button);
             }
             container.appendChild(board);

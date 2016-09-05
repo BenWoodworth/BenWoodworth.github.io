@@ -30,7 +30,7 @@ export class GameBoardMancala extends GameBoard {
     getAvailableMoves(): number[] {
         const moves: number[] = [];
 
-        let turnOffset = this.getTurn() ? 0 : 7;
+        let turnOffset = this.getTurn() == Player.Player1 ? 0 : 7;
         for (let i = turnOffset; i < turnOffset + 6; i++) {
             if (this.board[i] != 0) moves.push(i);
         }
@@ -49,25 +49,28 @@ export class GameBoardMancala extends GameBoard {
 
         // Drop stones in following spaces
         let curSpace = move;
-        while (stones-- > 0) {
+        while (stones > 0) {
             curSpace = (curSpace + 1) % 14;
             if (curSpace == skipSpace) continue;
 
             newBoard[curSpace]++;
+            stones--;
         }
 
         let sideStart = this.getTurn() == Player.Player1 ? 0 : 7;
-        if (curSpace >= sideStart && curSpace < sideStart + 6) { // If landed on own side
-            if (newBoard[curSpace] == 0) { // ...and slot is empty
+        if (curSpace >= sideStart && curSpace <= sideStart + 5) { // If landed on own side
+            if (newBoard[curSpace] == 1) { // ...and slot was empty
                 // ...Take pieces from opposite slot
-                let oppositeSlot = 12 - curSpace;
-                newBoard[sideStart + 6] += newBoard[oppositeSlot] + 1;
+                let oppositeSpace = 12 - curSpace;
+                newBoard[sideStart + 6] += newBoard[oppositeSpace] + 1;
                 newBoard[curSpace] = 0;
-                newBoard[oppositeSlot] = 0;
+                newBoard[oppositeSpace] = 0;
             }
-        } else if (curSpace != sideStart + 6) { // If didn't land in own Kalah...
-            // It's the other player's turn
-            newTurn = newTurn == Player.Player1 ? Player.Player2 : Player.Player1;
+        }
+        
+        // Other player's turn if didn't land in own Kalah
+        if (curSpace != sideStart + 6) {
+            newTurn = this.getTurn() == Player.Player1 ? Player.Player2 : Player.Player1;
         }
 
         // Return a new board
@@ -140,7 +143,7 @@ export class GameBoardMancala extends GameBoard {
 
         // Vertically align the divs
         for (let i = 0; i < 6; i++) {
-            bDivs[i].style.top = "50%";
+            bDivs[i].style.bottom = "0";
             bDivs[i + 7].style.top = "0";
         }
 
@@ -148,7 +151,8 @@ export class GameBoardMancala extends GameBoard {
         for (let i = 0; i < 14; i++) {
             let button = this.getGame().createActionButton(i);
             button.style.width = button.style.height = "100%";
-            button.innerText = this.board[i].toString();
+            let amount = this.board[i];
+            button.innerText = amount == 0 ? "" : amount.toString();
             board.appendChild(bDivs[i]).appendChild(button);
         }
 
