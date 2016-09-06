@@ -1,87 +1,72 @@
 import {GameBoard, Player} from "./game";
 
-interface movesAndScore {
-    moves: boolean[]; // [undef, undef, true, true] contains the moves 2 and 3.
-    score: number; 
+interface Move {
+    move: number;
+    score: number;
 }
 
 export class BoardEvaluator {
-
     public static getBestMove(board: GameBoard, depth: number, callback: (progress: number) => void) {
-        let moves: number[];
-        if (depth == 0) { // Select all available moves
-            moves = board.getAvailableMoves();
-        } else {
-            // Try to win if depth > 0, try to lose otherwise
+        let move: number;
+        if (depth == 0) { // Select a move randomly
+            let moves = board.getAvailableMoves();
+            move = moves[Math.floor(Math.random() * moves.length)];
+        } else { // Calculate best move
             let forPlayer = board.getTurn();
-            if (depth < 0) {
-                depth *= -1;
-                if (forPlayer == Player.Player1) forPlayer = Player.Player2
-                else forPlayer = Player.Player1;
+            if (depth < 0) { // Try to lose if depth < 0
+                depth = -depth;
+                let p1 = Player.Player1, p2 = Player.Player2;
+                forPlayer = forPlayer == p1 ? p2 : p1;
             }
 
-            // Select best moves using minimax
-            let result = BoardEvaluator.minimax(board, forPlayer, depth, -Infinity, Infinity, callback);
-            
-            moves = [];
-            result.moves.forEach((v, i) => moves.push(i));
-            //alert(`CPU move options: [${moves}], Score: ${result.score}`);
+            move = this.minimax(board, forPlayer, depth, -Infinity, Infinity, callback).move;
         }
-        
-        // Randomly select from the best moves
-        let i = Math.floor(Math.random() * moves.length);
+
+        // Randomly select from best moves
         callback && callback(1);
-        return moves[i];
+        return move;
     }
-
+    
     private static minimax(board: GameBoard, forPlayer: Player, depth: number,
-            alpha: number, beta: number, callback: (progress: number) => void): movesAndScore {
-
-        // Get available moves
-        let moves = board.getAvailableMoves();
-
-        // If the evaluation reached an end state, return current board score
+            alpha: number, beta: number, callback: (progress: number) => void): Move {
+        
+        // Check to see if it's the end of the search
         if (depth == 0 || board.isGameOver()) {
-            return {
-                moves: [],
-                score: board.getBoardValue(forPlayer)
+            return {move: null, score: board.getBoardValue(forPlayer)};
+        }
+
+        // Continue to calculate move value
+        let bestMove: Move = {move: null, score: null};
+        let turn = board.getTurn();
+        let moves = board.getAvailableMoves();
+        if (turn == forPlayer) { // Maximize
+            bestMove.score = -Infinity;
+            for (let i = 0; i < moves.length; i++) {
+                callback && callback(i / moves.length);
+
+                let moveScore = this.minimax(board.move(moves[i]), forPlayer, depth - 1, alpha, beta, null);
+                if (bestMove.score < moveScore.score) {
+                    bestMove.score = moveScore.score;
+                    bestMove.move = moves[i];
+                    alpha = bestMove.score;
+                }
+                if (alpha >= beta) break;
+            };
+        } else { // Minimize
+            bestMove.score = Infinity;
+            for (let i = 0; i < moves.length; i++) {
+                callback && callback(i / moves.length);
+
+                let moveScore = this.minimax(board.move(moves[i]), forPlayer, depth - 1, alpha, beta, null);
+                if (bestMove.score > moveScore.score) {
+                    bestMove.score = moveScore.score;
+                    bestMove.move = moves[i];
+                    beta = bestMove.score;
+                }
+                if (alpha >= beta) break;
             };
         }
 
-        // ...otherwise, continue evaluating
-        let turn = board.getTurn();
-        let bestMoves: movesAndScore = null;
-        for (let i = 0; i < moves.length; i++) {
-            callback && callback(i / moves.length);
-            let move = moves[i];
-
-            // Calculate move score
-            let newBoard = board.move(move);
-            let calcMoves = this.minimax(newBoard, forPlayer, depth - 1, null, null, null); // TODO Alpha/Beta pruning
-
-            // Update best move
-            if (bestMoves == null) { // First score
-                bestMoves = calcMoves;
-                bestMoves.moves = [];
-                bestMoves.moves[move] = true;
-            } else if (bestMoves.score == calcMoves.score) { // Same score
-                bestMoves.moves[move] = true;
-            } else if (turn == forPlayer) { // Try to maximize score
-                if (calcMoves.score > bestMoves.score) {
-                    bestMoves = calcMoves;
-                    bestMoves.moves = [];
-                    bestMoves.moves[move] = true;
-                }
-            } else { // Try to minimize score
-                if (calcMoves.score < bestMoves.score) {
-                    bestMoves = calcMoves;
-                    bestMoves.moves = [];
-                    bestMoves.moves[move] = true;
-                }
-            }
-        }
-        
-        // Callback, and return
-        return bestMoves;
+        return bestMove;
     }
 }

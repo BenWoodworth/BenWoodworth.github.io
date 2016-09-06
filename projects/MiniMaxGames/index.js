@@ -34,66 +34,61 @@ define("src/board-evaluator", ["require", "exports", "src/game"], function (requ
         function BoardEvaluator() {
         }
         BoardEvaluator.getBestMove = function (board, depth, callback) {
-            var moves;
+            var move;
             if (depth == 0) {
-                moves = board.getAvailableMoves();
+                var moves = board.getAvailableMoves();
+                move = moves[Math.floor(Math.random() * moves.length)];
             }
             else {
                 var forPlayer = board.getTurn();
                 if (depth < 0) {
-                    depth *= -1;
-                    if (forPlayer == game_1.Player.Player1)
-                        forPlayer = game_1.Player.Player2;
-                    else
-                        forPlayer = game_1.Player.Player1;
+                    depth = -depth;
+                    var p1 = game_1.Player.Player1, p2 = game_1.Player.Player2;
+                    forPlayer = forPlayer == p1 ? p2 : p1;
                 }
-                var result = BoardEvaluator.minimax(board, forPlayer, depth, -Infinity, Infinity, callback);
-                moves = [];
-                result.moves.forEach(function (v, i) { return moves.push(i); });
+                move = this.minimax(board, forPlayer, depth, -Infinity, Infinity, callback).move;
             }
-            var i = Math.floor(Math.random() * moves.length);
             callback && callback(1);
-            return moves[i];
+            return move;
         };
         BoardEvaluator.minimax = function (board, forPlayer, depth, alpha, beta, callback) {
-            var moves = board.getAvailableMoves();
             if (depth == 0 || board.isGameOver()) {
-                return {
-                    moves: [],
-                    score: board.getBoardValue(forPlayer)
-                };
+                return { move: null, score: board.getBoardValue(forPlayer) };
             }
+            var bestMove = { move: null, score: null };
             var turn = board.getTurn();
-            var bestMoves = null;
-            for (var i = 0; i < moves.length; i++) {
-                callback && callback(i / moves.length);
-                var move = moves[i];
-                var newBoard = board.move(move);
-                var calcMoves = this.minimax(newBoard, forPlayer, depth - 1, null, null, null);
-                if (bestMoves == null) {
-                    bestMoves = calcMoves;
-                    bestMoves.moves = [];
-                    bestMoves.moves[move] = true;
-                }
-                else if (bestMoves.score == calcMoves.score) {
-                    bestMoves.moves[move] = true;
-                }
-                else if (turn == forPlayer) {
-                    if (calcMoves.score > bestMoves.score) {
-                        bestMoves = calcMoves;
-                        bestMoves.moves = [];
-                        bestMoves.moves[move] = true;
+            var moves = board.getAvailableMoves();
+            if (turn == forPlayer) {
+                bestMove.score = -Infinity;
+                for (var i = 0; i < moves.length; i++) {
+                    callback && callback(i / moves.length);
+                    var moveScore = this.minimax(board.move(moves[i]), forPlayer, depth - 1, alpha, beta, null);
+                    if (bestMove.score < moveScore.score) {
+                        bestMove.score = moveScore.score;
+                        bestMove.move = moves[i];
+                        alpha = bestMove.score;
                     }
+                    if (alpha >= beta)
+                        break;
                 }
-                else {
-                    if (calcMoves.score < bestMoves.score) {
-                        bestMoves = calcMoves;
-                        bestMoves.moves = [];
-                        bestMoves.moves[move] = true;
-                    }
-                }
+                ;
             }
-            return bestMoves;
+            else {
+                bestMove.score = Infinity;
+                for (var i = 0; i < moves.length; i++) {
+                    callback && callback(i / moves.length);
+                    var moveScore = this.minimax(board.move(moves[i]), forPlayer, depth - 1, alpha, beta, null);
+                    if (bestMove.score > moveScore.score) {
+                        bestMove.score = moveScore.score;
+                        bestMove.move = moves[i];
+                        beta = bestMove.score;
+                    }
+                    if (alpha >= beta)
+                        break;
+                }
+                ;
+            }
+            return bestMove;
         };
         return BoardEvaluator;
     }());
@@ -111,9 +106,12 @@ define("src/game", ["require", "exports", "src/state", "src/board-evaluator"], f
         function Game(gameManager) {
             _super.call(this, gameManager);
             this.board = this.createBoard(Player.Player1);
-            this.depth = 9;
+            this.depth = 13;
             this.createBoard(Player.Player1);
         }
+        Game.prototype.isPlayerHuman = function (player) {
+            return player == Player.Player1;
+        };
         Game.prototype.getBoard = function () {
             return this.board;
         };
@@ -159,9 +157,6 @@ define("src/game", ["require", "exports", "src/state", "src/board-evaluator"], f
         };
         Game.prototype.cpuProgress = function (progress) {
             document.title = "CPU Progress: " + Math.floor(progress * 100) + "%";
-        };
-        Game.prototype.isPlayerHuman = function (player) {
-            return player == Player.Player1;
         };
         return Game;
     }(state_1.State));

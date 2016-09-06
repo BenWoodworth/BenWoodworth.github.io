@@ -15,11 +15,15 @@ export enum Player {
  */
 export abstract class Game extends State {
     private board = this.createBoard(Player.Player1);
-    private depth = 9;
+    private depth = 13;
 
     constructor(gameManager: GameManager) {
         super(gameManager);
         this.createBoard(Player.Player1);
+    }
+
+    public isPlayerHuman(player: Player) {
+        return player == Player.Player1;
     }
 
     /**
@@ -83,7 +87,7 @@ export abstract class Game extends State {
     }
 
     private cpuProgress(progress: number) {
-        document.title = `CPU Progress: ${Math.floor(progress * 100)}%`;
+        document.title = `CPU Progress: ${Math.round(progress * 100)}%`;
     }
 
     /**
@@ -95,10 +99,6 @@ export abstract class Game extends State {
      * Get a description of this game.
      */
     abstract getDesc(): string;
-
-    public isPlayerHuman(player: Player) {
-        return player == Player.Player1;
-    }
 }
 
 /**
