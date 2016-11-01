@@ -7,8 +7,20 @@
 -->
 
 <releases>
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.26/FastCraftPlus.jar"
+             version="0.26" stable="?" md5="025B44D615B3296758A1E3FF467F8F45">
+        <change>Improved config.yml comments.</change>
+        <change>Give OP's more default permissions.</change>
+        <change>Rename language CN to ZH-CN.</change>
+        <change>Add traditional Chinese (ZH-TW).</change>
+        <change>Run automatic update checks in a separate thread.</change>
+        <change>Add debug messages to update checks.</change>
+        <change>Fixed multiplier going below 1 when shift+right clicking.</change>
+        <change>Fixed achievements for bookshelves and enchantment tables.</change>
+    </release>
+    
     <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.25/FastCraftPlus.jar"
-             version="0.25" stable="?" md5="B2042AAA2BC21F60C4A56930ABF34B65">
+             version="0.25" stable="true" md5="B2042AAA2BC21F60C4A56930ABF34B65">
         <change>Added automatic update functionality.</change>
         <change>Let recipes in the recipes.yml config use &amp; for color codes.</change>
         <change>Added spaces between config.yml sections.</change>
