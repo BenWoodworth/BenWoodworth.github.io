@@ -7,8 +7,19 @@
 -->
 
 <releases>
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.26.2/FastCraftPlus.jar"
+             version="0.26.2" stable="?" md5="6369DD61ACDCBC451BE2D73492C174CA">
+        <change>Resolved issues with ProRecipes.</change>
+    </release>
+    
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.26.1/FastCraftPlus.jar"
+             version="0.26.1" stable="true" md5="F1A85F0D67DD73EF3599971A60936118">
+        <change>Allow STABLE update option to download PATCH updates.</change>
+        <change>Added Vietnamese and Polish languages.</change>
+    </release>
+    
     <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.26/FastCraftPlus.jar"
-             version="0.26" stable="?" md5="025B44D615B3296758A1E3FF467F8F45">
+             version="0.26" stable="true" md5="025B44D615B3296758A1E3FF467F8F45">
         <change>Improved config.yml comments.</change>
         <change>Give OP's more default permissions.</change>
         <change>Rename language CN to ZH-CN.</change>
