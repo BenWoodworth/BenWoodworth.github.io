@@ -7,8 +7,13 @@
 -->
 
 <releases>
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.26.3/FastCraftPlus.jar"
+             version="0.26.3" stable="true" md5="8B2CABF9C7283ABFC8C09C06A82E4B27">
+        <change>Resolved remaining known issues with ProRecipes.</change>
+    </release>
+    
     <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.26.2/FastCraftPlus.jar"
-             version="0.26.2" stable="?" md5="6369DD61ACDCBC451BE2D73492C174CA">
+             version="0.26.2" stable="true" md5="6369DD61ACDCBC451BE2D73492C174CA">
         <change>Resolved issues with ProRecipes.</change>
     </release>
     
