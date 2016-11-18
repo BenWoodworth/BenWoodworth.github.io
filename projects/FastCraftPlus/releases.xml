@@ -7,6 +7,11 @@
 -->
 
 <releases>
+    <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.26.4/FastCraftPlus.jar"
+             version="0.26.4" stable="true" md5="AE3A9749788AC2033CF5A626C2CB62C6">
+        <change>Resolved issues with Minecraft 1.11</change>
+    </release>
+    
     <release url="https://github.com/BenWoodworth/FastCraftPlus/releases/download/v0.26.3/FastCraftPlus.jar"
              version="0.26.3" stable="true" md5="8B2CABF9C7283ABFC8C09C06A82E4B27">
         <change>Resolved remaining known issues with ProRecipes.</change>
