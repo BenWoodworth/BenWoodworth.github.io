@@ -18,7 +18,6 @@
 	frame.style.right = "0";
 	frame.style.width = "100%";
 	frame.style.height = "100%";
-	frame.style.zIndex = "10000";
 	
 	// Add the frame to the page
 	document.body.appendChild(frame);
@@ -30,17 +29,16 @@
 		
 		// Update the page state
 		var frameTitle = windowFrame.document.title;
-		if (replaceState) {
-			window.history.replaceState({src: frameUrl, title: frameTitle}, "", frameUrl);
-		} else {
-			window.history.pushState({src: frameUrl, title: frameTitle}, "", frameUrl);
-		}
+		var stateFn = replaceState
+			? window.history.replaceState
+			: window.history.pushState;
+		stateFn({src: frameUrl, title: frameTitle}, "", frameUrl);
 		replaceState = false;
 		
 		// Edit Krutz's page
 		if (frameUrl == krutzUrl) {
 			windowFrame.document.body.innerHTML = windowFrame.document.body.innerHTML
-				.replace("Daniel Krutz", "Daniel \"The Gangsta\" Krutz")
+				.replace("Daniel Krutz", "Daniel \"The Hacker\" Krutz")
 				.replace("Lecturer",     "Lecturer & OG Rapper")
 			
 				.replace("Research Interests",             "Course Perks")
