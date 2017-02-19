@@ -42,7 +42,7 @@
 				.replace("Research Interests",             "Course Perks")
 				.replace("Android Security",               "Accept bribes to boost grades.")
 				.replace("Concolic Analysis",              "Gives out more candy than Martinez.")
-				.replace("Mobile Malware",                 "Teaches how to hack grades in other classes.")
+				.replace("Mobile Malware",                 "Teaches how to manipulate grades for other classes.")
 				.replace("Software Engineering Education", "Drops 3 lowest exam grades.");
 		}
 	});
