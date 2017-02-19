@@ -29,7 +29,7 @@
 		
 		// Update the page state
 		var frameTitle = windowFrame.document.title;
-		replaceState ? window.history.replaceState({src: frameUrl, title: frameTitle}, "", frameUrl);
+		replaceState ? window.history.replaceState({src: frameUrl, title: frameTitle}, "", frameUrl)
 		             : window.history.pushState(   {src: frameUrl, title: frameTitle}, "", frameUrl);
 		replaceState = false;
 		
