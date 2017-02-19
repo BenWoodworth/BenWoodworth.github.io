@@ -29,10 +29,8 @@
 		
 		// Update the page state
 		var frameTitle = windowFrame.document.title;
-		var stateFn = replaceState
-			? window.history.replaceState
-			: window.history.pushState;
-		stateFn({src: frameUrl, title: frameTitle}, "", frameUrl);
+		replaceState ? window.history.replaceState({src: frameUrl, title: frameTitle}, "", frameUrl);
+		             : window.history.pushState(   {src: frameUrl, title: frameTitle}, "", frameUrl);
 		replaceState = false;
 		
 		// Edit Krutz's page
