@@ -7,6 +7,11 @@
 -->
 
 <releases>
+    <release url="https://github.com/BenWoodworth/FastCraft/releases/download/v0.27.1/FastCraftPlus.jar"
+             version="0.27.1" stable="true" md5="7a7cd2c00b499a5d374fb073b2171de5">
+        <change>Updated DE.yml with Minecraft 1.12 items</change>
+    </release>
+    
     <release url="https://github.com/BenWoodworth/FastCraft/releases/download/v0.27/FastCraftPlus.jar"
              version="0.27" stable="true" md5="06e1ca2802acb4fb253233c2c492c443">
         <change>Partial fix for Minecraft 1.12 achievement issue</change>
