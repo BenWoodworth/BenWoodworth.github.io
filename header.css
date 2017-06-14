@@ -1,0 +1,71 @@
+:root {
+    --nav-width: 550px;
+    --nav-height: 64px;
+    --nav-item-width: var(--nav-height);
+    --nav-item-width-expanded: 150px;
+    --nav-item-img-padding: 8px;
+    --nav-item-font-size: 20px;
+
+    --nav-item-size-duration: 800ms;
+}
+
+#home      { background-color: #3CF; }
+#projects  { background-color: #B84; }
+#education { background-color: #F82; }
+#contact   { background-color: #AD3; }
+#github    { background-color: #C4C; }
+#linkedin  { background-color: #08D; }
+
+#nav {
+    background-color: red;
+
+    display: flex;
+    width: var(--nav-width);
+    height: var(--nav-height);
+}
+
+#nav a {
+    text-decoration: none;
+    color: black;
+}
+
+#nav a span {
+    font-size: 30px;
+    font-family: sans-serif;
+}
+
+#nav > * {
+    flex-basis: var(--nav-item-width);
+    display: inline-block;
+
+    height: var(--nav-height);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#nav > * > * {
+    vertical-align: middle;
+}
+
+#nav > *::before {
+    display: inline-block;
+    width: 0;
+    height: 100%;
+    vertical-align: middle;
+}
+
+#nav > * > img {
+    width: calc(var(--nav-height) - 2 * var(--nav-item-img-padding));
+    padding: var(--nav-item-img-padding);
+}
+
+/* Animations */
+#nav > * {
+    transition: .5s;
+}
+
+#nav:not(:hover) > .nav-current,
+#nav:hover > *:hover {
+    flex-grow: 1000000;
+}
+/**************/

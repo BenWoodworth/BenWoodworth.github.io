@@ -1,0 +1,14 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    max-width: 1000px;
+    margin: auto;
+    background-color: #444;
+}
+
+body > * {
+    background-color: #666;
+}
