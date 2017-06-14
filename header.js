@@ -20,6 +20,12 @@ function updateHash() {
     var page = navItem.dataset.page;
     if (page !== null) {
         loadContainer("content", page);
+
+        var navItems = document.getElementById("nav").children;
+        for (var i = 0; i < navItems.length; i++) {
+            navItems[i].classList.remove("nav-current");
+        }
+        navItem.classList.add("nav-current");
     }
 }
 
