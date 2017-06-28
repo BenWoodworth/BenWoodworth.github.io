@@ -7,6 +7,12 @@
 -->
 
 <releases>
+    <release url="https://github.com/BenWoodworth/FastCraft/releases/download/v0.27.2/FastCraftPlus.jar"
+             version="0.27.2" stable="true" md5="6DCF0B7E22BA60228DF069B05F491DBF">
+        <change>Resolves NullPointerException with other plugins.</change>
+        <change>Add clarification about shapeless recipes in recipes.yml.</change>
+    </release>
+    
     <release url="https://github.com/BenWoodworth/FastCraft/releases/download/v0.27.1/FastCraftPlus.jar"
              version="0.27.1" stable="true" md5="7a7cd2c00b499a5d374fb073b2171de5">
         <change>Updated DE.yml with Minecraft 1.12 items</change>
