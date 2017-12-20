@@ -1,4 +1,5 @@
-var BASE_URL = "https://circleci.com/api/v1.1/project/github/BenWoodworth/FastCraft";
+var CIRCLE_BASE_URL = "https://circleci.com/api/v1.1/project/github/BenWoodworth/FastCraft";
+var S3_BASE_URL = "http://s3.amazonaws.com/fastcraft";
 
 /**
  * The result of the build.
@@ -14,7 +15,7 @@ var BuildOutcome = {
  *
  * @constructor
  */
-function Build(outcome, number, branch, tag, commitHash, commitUrl, artifactName, artifactUrl) {
+function Build(outcome, number, previous, branch, tag, commitHash, commitUrl, artifactName, artifactUrl) {
     this.outcome = outcome;
     this.buildNumber = number;
     this.branch = branch;
@@ -22,17 +23,24 @@ function Build(outcome, number, branch, tag, commitHash, commitUrl, artifactName
     this.commitHash = commitHash;
     this.artifactName = artifactName;
     this.artifactUrl = artifactUrl;
+
+    this.getPreviousBuild = function(callback) {
+        getBuild(previous, callback);
+    }
 }
 
 /**
- * Get the builds from CircleCI.
+ * Get the latest CircleCI build.
+ *
+ * @param callback the method called once the build has been fetched.
  */
-function getBuilds(url) {
+function getLatestBuild(callback) {
     var req = new XMLHttpRequest();
     req.open("GET", url);
     req.onload = function () {
         if (req.status === 200) {
-            parseBuilds(req.responseText);
+            var number = JSON.parse(req.responseText)[0].build_num;
+            getBuild(number, callback)
         } else {
             alert("Request failed.");
         }
@@ -41,41 +49,60 @@ function getBuilds(url) {
 }
 
 /**
- * Parse the builds from a CircleCI API response.
+ * Get a CircleCI build.
  *
- * @param json the CircleCI JSON response
+ * @param number the build number.
+ * @param callback the method called once the build has been fetched.
  */
-function parseBuilds(json) {
-    var response = JSON.parse(json);
+function getBuild(number, callback) {
+    if (previous == null) {
+        callback(null);
+        return;
+    }
 
-    var builds = [];
-    response.forEach(function(build) {
-        builds.push(new Build(
+    var s3Callback = function(circleBuild, s3Xml) {
+        var file = s3Xml
+            .getElementsByTagName("Contents")[0]
+            .getElementsByTagName("Key")[0]
+            .nodeValue;
+
+        var fileUrl = S3_BASE_URL + "/" + file;
+        var fileName = file.substr(file.lastIndexOf("/") + 1);
+
+        callback(new Build(
             build.outcome,
             build.build_num,
+            build.previous.build_num,
             build.branch,
             build.vcs_tag,
             build.all_commit_details.commit,
             build.all_commit_details.commit_url,
-            null,
-            null
+            fileName,
+            fileUrl
         ));
-    });
+    };
 
-    getArtifacts(builds);
+    var circleCallback = function(circleBuild) {
+        var req = new XMLHttpRequest();
+        req.open("GET", S3_BASE_URL + "?prefix=circleci/" + number + "/");
+        req.onload = function () {
+            if (req.status === 200) {
+                s3Callback(circleBuild, req.responseXML);
+            } else {
+                alert("Request failed.");
+            }
+        };
+        req.send();
+    };
+
+    var req = new XMLHttpRequest();
+    req.open("GET", CIRCLE_BASE_URL + "/" + number);
+    req.onload = function () {
+        if (req.status === 200) {
+            circleCallback(JSON.parse(req.responseText));
+        } else {
+            alert("Request failed.");
+        }
+    };
+    req.send();
 }
-
-/**
- * Get the artifacts associated with the builds.
- *
- * @param builds the CircleCI Builds
- */
-function getArtifacts(builds) {
-    listBuilds(builds);
-}
-
-function listBuilds(builds) {
-    alert(builds);
-}
-
-getBuilds(BASE_URL);
