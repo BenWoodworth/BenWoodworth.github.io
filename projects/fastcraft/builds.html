@@ -19,7 +19,7 @@
     <script src="builds.js"></script>
 </head>
 <body>
-<table class="table">
+<table class="table table-hover">
     <thead class="thead-light">
     <tr>
         <td>Build #</td>
@@ -59,26 +59,38 @@
         var colArtifact = row.appendChild(document.createElement("td"));
 
         if (build.buildNumber != null) {
-            colNumber.innerText = build.buildNumber;
+            var a = colNumber.appendChild(document.createElement("a"));
+            a.innerText = build.buildNumber;
+            a.href = "https://circleci.com/gh/BenWoodworth/FastCraft/" + build.buildNumber;
+            a.classList.add("btn", "btn-light");
         }
 
         if (build.tag != null) {
-            colTag.innerText = build.tag;
-
+            var a = colTag.appendChild(document.createElement("a"));
+            a.innerText = build.tag;
+            a.href = "https://github.com/BenWoodworth/FastCraft/tree/" + build.tag;
+            a.classList.add("btn", "btn-light");
         }
 
         if (build.commitHash != null) {
-            colCommit.innerText = build.commitHash.substr(0, 7);
+            var a = colCommit.appendChild(document.createElement("a"));
+            a.innerText = build.commitHash.substr(0, 7);
+            a.href = "https://github.com/BenWoodworth/FastCraft/commit/" + build.commitHash;
+            a.classList.add("btn", "btn-light");
         }
 
         if (build.branch != null) {
-            colBranch.innerText = build.branch;
+            var a = colBranch.appendChild(document.createElement("a"));
+            a.innerText = build.branch;
+            a.href = "https://github.com/BenWoodworth/FastCraft/tree/" + build.branch;
+            a.classList.add("btn", "btn-light");
         }
 
         if (build.artifactName != null) {
             var a = colArtifact.appendChild(document.createElement("a"));
             a.innerText = build.artifactName;
             a.href = build.artifactUrl;
+            a.classList.add("btn", "btn-outline-primary");
         }
     }
 </script>
