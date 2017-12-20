@@ -36,7 +36,7 @@ function Build(outcome, number, previous, branch, tag, commitHash, commitUrl, ar
  */
 function getLatestBuild(callback) {
     var req = new XMLHttpRequest();
-    req.open("GET", url);
+    req.open("GET", CIRCLE_BASE_URL);
     req.onload = function () {
         if (req.status === 200) {
             var number = JSON.parse(req.responseText)[0].build_num;
@@ -55,7 +55,7 @@ function getLatestBuild(callback) {
  * @param callback the method called once the build has been fetched.
  */
 function getBuild(number, callback) {
-    if (previous == null) {
+    if (number == null) {
         callback(null);
         return;
     }
@@ -64,19 +64,20 @@ function getBuild(number, callback) {
         var file = s3Xml
             .getElementsByTagName("Contents")[0]
             .getElementsByTagName("Key")[0]
+            .childNodes[0]
             .nodeValue;
 
         var fileUrl = S3_BASE_URL + "/" + file;
         var fileName = file.substr(file.lastIndexOf("/") + 1);
 
         callback(new Build(
-            build.outcome,
-            build.build_num,
-            build.previous.build_num,
-            build.branch,
-            build.vcs_tag,
-            build.all_commit_details.commit,
-            build.all_commit_details.commit_url,
+            circleBuild.outcome,
+            circleBuild.build_num,
+            (circleBuild.previous || {}).build_num || null,
+            circleBuild.branch,
+            circleBuild.vcs_tag,
+            circleBuild.all_commit_details.commit,
+            circleBuild.all_commit_details.commit_url,
             fileName,
             fileUrl
         ));
