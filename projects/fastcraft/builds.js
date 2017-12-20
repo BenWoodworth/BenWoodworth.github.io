@@ -24,7 +24,7 @@ function Build(outcome, number, previous, branch, tag, commitHash, commitUrl, ar
     this.artifactName = artifactName;
     this.artifactUrl = artifactUrl;
 
-    this.getPreviousBuild = function(callback) {
+    this.getPreviousBuild = function (callback) {
         getBuild(previous, callback);
     }
 }
@@ -55,20 +55,18 @@ function getLatestBuild(callback) {
  * @param callback the method called once the build has been fetched.
  */
 function getBuild(number, callback) {
-    if (number == null) {
+    if (number == null || number < 1) {
         callback(null);
         return;
     }
 
-    var s3Callback = function(circleBuild, s3Xml) {
-        var file = s3Xml
-            .getElementsByTagName("Contents")[0]
-            .getElementsByTagName("Key")[0]
-            .childNodes[0]
-            .nodeValue;
+    var s3Callback = function (circleBuild, s3Xml) {
+        var xmlContents = s3Xml.getElementsByTagName("Contents")[0];
+        var xmlKey = xmlContents && xmlContents.getElementsByTagName("Key")[0];
+        var file = xmlKey && xmlKey.childNodes[0].nodeValue;
 
-        var fileUrl = S3_BASE_URL + "/" + file;
-        var fileName = file.substr(file.lastIndexOf("/") + 1);
+        var fileUrl = file && (S3_BASE_URL + "/" + file);
+        var fileName = file && file.substr(file.lastIndexOf("/") + 1);
 
         callback(new Build(
             circleBuild.outcome,
@@ -76,14 +74,14 @@ function getBuild(number, callback) {
             (circleBuild.previous || {}).build_num || null,
             circleBuild.branch,
             circleBuild.vcs_tag,
-            circleBuild.all_commit_details.commit,
-            circleBuild.all_commit_details.commit_url,
+            (circleBuild.all_commit_details[0] || {}).commit || null,
+            (circleBuild.all_commit_details[0] || {}).commit_url || null,
             fileName,
             fileUrl
         ));
     };
 
-    var circleCallback = function(circleBuild) {
+    var circleCallback = function (circleBuild) {
         var req = new XMLHttpRequest();
         req.open("GET", S3_BASE_URL + "?prefix=circleci/" + number + "/");
         req.onload = function () {
