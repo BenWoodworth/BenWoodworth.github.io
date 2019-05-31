@@ -65,7 +65,7 @@ function getBuild(number, callback) {
         var xmlKey = xmlContents && xmlContents.getElementsByTagName("Key")[0];
         var file = xmlKey && xmlKey.childNodes[0].nodeValue;
 
-        var fileUrl = file && (S3_BASE_URL + "/" + file);
+        var fileUrl = file && (S3_BASE_URL + "/" + encodeURIComponent(file));
         var fileName = file && file.substr(file.lastIndexOf("/") + 1);
 
         callback(new Build(
