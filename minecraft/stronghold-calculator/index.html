@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="index.js"></script>
+
+    <title>Minecraft Stronghold Calculator</title>
+</head>
+<body class="bg-light">
+<div class="container">
+    <div class="py-5 text-center">
+        <h1>Minecraft Stronghold Calculator</h1>
+        <p class="lead">Find stronghold coordinates with two eyes of ender!</p>
+    </div>
+    <div class="row">
+        <div class="my-2 col-12 col-lg-6">
+            <h4>Eye of Ender Coordinates</h4>
+            <template id="ender-coord-template">
+                <li class="ender-coord list-group-item">
+                    <div class="row">
+                        <div class="input-group py-1 col-12 col-md-4">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">x</div>
+                            </div>
+                            <input type="number" class="ender-coord-x form-control">
+                        </div>
+                        <div class="input-group py-1 col-12 col-md-4">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">z</div>
+                            </div>
+                            <input type="number" class="ender-coord-z form-control">
+                        </div>
+                        <div class="input-group py-1 col-12 col-md-4">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">yaw</div>
+                            </div>
+                            <input type="number" class="ender-coord-yaw form-control">
+                        </div>
+                    </div>
+                </li>
+            </template>
+            <ul id="ender-coords" class="list-group"></ul>
+            <script>
+                addEnderCoordElement()
+                addEnderCoordElement()
+            </script>
+            <button class="btn btn-primary w-100 my-2" onclick="calculate()">Calculate</button>
+        </div>
+        <div class="my-2 col-12 col-lg-6">
+            <h4>Stronghold Coordinates</h4>
+            <ul id="stronghold-coords" class="list-group">
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="input-group py-1 col-12 col-sm-6">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">x</div>
+                            </div>
+                            <input id="stronghold-coord-x" type="text" readonly="readonly"
+                                   class="form-control bg-light">
+                        </div>
+                        <div class="input-group py-1 col-12 col-sm-6">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">z</div>
+                            </div>
+                            <input id="stronghold-coord-z" type="text" readonly="readonly"
+                                   class="form-control bg-light">
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="my-2 col-12">
+            <h4>How to use</h4>
+            <div class="card">
+                <div class="card-body">
+                    <p>
+                        Open the debug screen with the F3 key. Throw an eye of ender, line up the green on the
+                        crosshairs with the center of the eye of ender when it's at its highest, and copy your
+                        <code>x</code>, <code>z</code>, and <code>yaw</code> into the calculator.
+                    </p>
+                    <p>
+                        Move a few hundred blocks to the left or right (perpendicular to the direction of the eye
+                        of ender), then throw another eye of ender, and copy the coordinates to the calculator. The
+                        <code>yaw</code> should be different by at least a few degrees. The greater the difference,
+                        the better.
+                    </p>
+                    <a href="demo.png" target="_blank">
+                        <img class="w-100" alt="demo" src="demo.png">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
