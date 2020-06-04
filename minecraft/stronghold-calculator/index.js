@@ -6,6 +6,11 @@ function addEnderCoordElement() {
 }
 
 class EnderCoord {
+    /**
+     * @param {Number} x
+     * @param {Number} z
+     * @param {Number} yaw
+     */
     constructor(x, z, yaw) {
         this.x = x
         this.z = z
@@ -13,13 +18,22 @@ class EnderCoord {
     }
 }
 
-class Coord {
-    constructor(x, z) {
+/**
+ * @param {Number} x
+ * @param {Number} z
+ * @param {String} errorMessage
+ */
+class CalcResult {
+    constructor(x, z, errorMessage) {
         this.x = x
         this.z = z
+        this.errorMessage = errorMessage
     }
 }
 
+/**
+ * @returns {EnderCoord[]}
+ */
 function getEnderCoords() {
     let enderCoords = []
     for (let element of enderCoordsElement().getElementsByClassName("ender-coord")) {
@@ -44,23 +58,64 @@ function getEnderCoords() {
                 return null
             }
 
-            return new EnderCoord(x, z, yaw / 180 * Math.PI)
+            return new EnderCoord(x, z, yaw)
         })
         .filter(enderCoord => enderCoord != null)
 }
 
+/**
+ * @param {EnderCoord} coord0
+ * @param {EnderCoord} coord1
+ * @returns {CalcResult}
+ */
 function calculateStrongholdCoords(coord0, coord1) {
+    /*
+     * Stronghold coordinates, where d# is the distance to the stronghold:
+     *    x = x0 - d0 * sin(yaw0) = x1 - d1 * sin(yaw1)
+     *    z = z0 + d0 * cos(yaw0) = z1 + d1 * cos(yaw1)
+     *
+     * Solve for d1 in terms of d0:
+     *    x0 - d0 * sin(yaw0) = x1 - d1 * sin(yaw1)
+     * => d1 * sin(yaw1) = x1 - x0 + d0 * sin(yaw0)
+     * => d1 = (x1 - x0 + d0 * sin(yaw0)) / sin(yaw1)
+     * => d1 = (d0 * sin(yaw0) + (x1 - x0)) / sin(yaw1)
+     *
+     *    z0 + d0 * cos(yaw0) = z1 + d1 * cos(yaw1)
+     * => -d1 * cos(yaw1) = z1 - z0 - d0 * cos(yaw0)
+     * => d1 = (z1 - z0 - d0 * cos(yaw0)) / -cos(yaw1)
+     * => d1 = (d0 * cos(yaw0) - (z1 - z0)) / cos(yaw1)
+     *
+     * Solve for d0:
+     *    d1 = (d0 * sin(yaw0) + (x1 - x0)) / sin(yaw1), d1 = (d0 * cos(yaw0) - (z1 - z0)) / cos(yaw1)
+     * => (d0 * sin(yaw0) + (x1 - x0)) / sin(yaw1) = (d0 * cos(yaw0) - (z1 - z0)) / cos(yaw1)
+     * => d0 * sin(yaw0) + (x1 - x0) = (d0 * cos(yaw0) - (z1 - z0)) * sin(yaw1) / cos(yaw1)
+     * => d0 * sin(yaw0) + (x1 - x0) = (d0 * cos(yaw0) - (z1 - z0)) * tan(yaw1)
+     * => d0 * sin(yaw0) + (x1 - x0) = d0 * cos(yaw0) * tan(yaw1) - (z1 - z0) * tan(yaw1)
+     * => d0 * sin(yaw0) - d0 * cos(yaw0) * tan(yaw1) = -(x1 - x0) - (z1 - z0) * tan(yaw1)
+     * => d0 * (sin(yaw0) - cos(yaw0) * tan(yaw1)) = -((x1 - x0) + (z1 - z0) * tan(yaw1))
+     * => d0 = -((x1 - x0) + (z1 - z0) * tan(yaw1)) / (sin(yaw0) - cos(yaw0) * tan(yaw1))
+     * => d0 = ((x1 - x0) + (z1 - z0) * tan(yaw1)) / (cos(yaw0) * tan(yaw1) - sin(yaw0))
+     */
     let x0 = coord0.x
-    let z0 = coord0.z
-    let yaw0 = coord0.yaw
     let x1 = coord1.x
+    let z0 = coord0.z
     let z1 = coord1.z
-    let yaw1 = coord1.yaw
+    let yaw0 = coord0.yaw / 180 * Math.PI
+    let yaw1 = coord1.yaw / 180 * Math.PI
+    let d0 = ((x1 - x0) + (z1 - z0) * Math.tan(yaw1)) / (Math.cos(yaw0) * Math.tan(yaw1) - Math.sin(yaw0))
+    let d1 = (d0 * Math.cos(yaw0) - (z1 - z0)) / Math.cos(yaw1)
+    let x = x0 - d0 * Math.sin(yaw0)
+    let z = z0 + d0 * Math.cos(yaw0)
 
-    let x = (x1 / Math.tan(yaw1) - x0 / Math.tan(yaw0) + z1 - z0) / (1 / Math.tan(yaw1) - 1 / Math.tan(yaw0))
-    let z = z0 - (x - x0) / Math.tan(yaw0)
-
-    return new Coord(x, z)
+    if (x0 === x1 && z0 === z1) {
+        return new CalcResult(null, null, "Eyes of Ender were thrown from the same position")
+    } else if (isNaN(d0)) {
+        return new CalcResult(null, null, "Eyes of Ender are inline with each other")
+    } else if (d0 < 0 || d1 < 0) {
+        return new CalcResult(null, null, "Eyes of Ender are pointing towards different strongholds")
+    } else {
+        return new CalcResult(x, z, null)
+    }
 }
 
 function calculate() {
@@ -68,13 +123,18 @@ function calculate() {
     let x = ""
     let z = ""
 
-    if (enderCoords.length >= 2 && enderCoords[0] !== enderCoords[1]) {
+    if (enderCoords.length >= 2) {
         let coords = calculateStrongholdCoords(enderCoords[0], enderCoords[1])
-
-        if (!isNaN(coords.x) && !isNaN(coords.z)) {
+        if (coords.errorMessage == null) {
             x = Math.round(coords.x)
             z = Math.round(coords.z)
+        } else {
+            x = ""
+            z = ""
+            window.alert(coords.errorMessage)
         }
+    } else {
+        window.alert("Missing Eye of Ender coordinates")
     }
 
     document.getElementById("stronghold-coord-x").value = x
